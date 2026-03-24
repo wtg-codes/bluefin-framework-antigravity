@@ -14,12 +14,16 @@ name: bluebuild
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   lint:
     name: Lint YAML
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
       - name: yamllint
         uses: ibiqlik/action-yamllint@v3
         with:
@@ -42,7 +46,7 @@ jobs:
           - recipe.yml
     steps:
       - name: Build and Push Custom Image
-        uses: blue-build/github-action@v1.11
+        uses: blue-build/github-action@v1.11.1
         with:
           recipe: ${{ matrix.recipe }}
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
