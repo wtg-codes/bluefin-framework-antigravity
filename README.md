@@ -1,42 +1,55 @@
-# bluefin-framework-antigravity &nbsp; [![bluebuild build badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml)
+# bluefin-framework-antigravity
 
-See the [BlueBuild docs](https://blue-build.org/how-to/setup/) for quick setup instructions for setting up your own repository based on this template.
+[![bluebuild build badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml)
 
-After setup, it is recommended you update this README to describe your custom image.
+**bluefin-framework-antigravity** is a highly specialized, cryptographically signed, immutable operating system based on Bluefin-DX, optimized for the Framework Laptop 13 and agentic development workflows.
+
+## Target Hardware Manifest
+* **System:** Framework Laptop 13
+* **Processor:** AMD Ryzen™ AI 300 Series - Ryzen™ AI 9 HX 370 (Zen 5, RDNA 3.5, XDNA 2 NPU)
+* **Memory:** 96GB (2 x 48GB) DDR5-5600 (UMA maximized via BIOS for local LLM inference)
+* **Storage:** 2TB WD_BLACK™ SN850X NVMe™ M.2 2280
+* **Display:** 2.8K (2880x1920, 3:2 ratio - Wayland 150% fractional scaling)
+* **Expansion I/O:** USB-C, USB-A, HDMI (3rd Gen), and Ethernet.
+
+## Features
+- **Strict Immutability:** Zero host-level GUI/CLI tools (Flathub/Homebrew only).
+- **AI Quarantine:** Antigravity agent operates in a declarative Distrobox container.
+- **Hardware Passthrough:** ROCm access for GPU/NPU-accelerated AI workloads.
+- **TDI Validated:** CI/CD pipeline enforces hardware and configuration constraints via BATS.
 
 ## Installation
 
-> [!WARNING]  
-> [This is an experimental feature](https://www.fedoraproject.org/wiki/Changes/OstreeNativeContainerStable), try at your own discretion.
+To rebase an existing atomic Fedora installation to this image:
 
-To rebase an existing atomic Fedora installation to the latest build:
+1. **Rebase to the unsigned image** (installs signing keys and policies):
+   ```bash
+   rpm-ostree rebase ostree-unverified-registry:ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
+   ```
+2. **Reboot**:
+   ```bash
+   systemctl reboot
+   ```
+3. **Rebase to the signed image**:
+   ```bash
+   rpm-ostree rebase ostree-image-signed:docker://ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
+   ```
+4. **Reboot**:
+   ```bash
+   systemctl reboot
+   ```
 
-- First rebase to the unsigned image, to get the proper signing keys and policies installed:
-  ```
-  rpm-ostree rebase ostree-unverified-registry:ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
-  ```
-- Reboot to complete the rebase:
-  ```
-  systemctl reboot
-  ```
-- Then rebase to the signed image, like so:
-  ```
-  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
-  ```
-- Reboot again to complete the installation
-  ```
-  systemctl reboot
-  ```
+## Setup Antigravity AI Quarantine
 
-The `latest` tag will automatically point to the latest build. That build will still always use the Fedora version specified in `recipe.yml`, so you won't get accidentally updated to the next major version.
+After installation, initialize the isolated AI environment:
 
-## ISO
-
-If build on Fedora Atomic, you can generate an offline ISO with the instructions available [here](https://blue-build.org/how-to/generate-iso/#_top). These ISOs cannot unfortunately be distributed on GitHub for free due to large sizes, so for public projects something else has to be used for hosting.
+```bash
+ujust setup-antigravity
+```
 
 ## Verification
 
-These images are signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign). You can verify the signature by downloading the `cosign.pub` file from this repo and running the following command:
+The image is signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign). Verify the signature:
 
 ```bash
 cosign verify --key cosign.pub ghcr.io/wtg-codes/bluefin-framework-antigravity
