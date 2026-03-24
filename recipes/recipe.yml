@@ -17,7 +17,7 @@ modules:
       - source: system
         destination: /  # copies files/system/* into your image's root folder /
       - source: tests
-        destination: /tests  # copies the tests folder into the image root for CI validation
+        destination: /tests  # copies the tests folder into the image root for validation
 
   - type: rpm-ostree
     install:
@@ -52,3 +52,8 @@ modules:
       - scope: user  # Also add Flathub user repo, but no user packages
 
   - type: signing  # this sets up the proper policy & signing files for signed images to work fully
+
+  - type: script
+    snippets:
+      - echo "Running OS validation tests..."
+      - bats /tests/os_validation.bats
