@@ -1,0 +1,10 @@
+[org.gnome.mutter]
+experimental-features=['scale-monitor-framebuffer']
+
+[org.gnome.desktop.interface]
+scaling-factor=uint32 1
+text-scaling-factor=1.5
+
+# This is a system-wide default. Individual users can still override this.
+# Note: 150% fractional scaling in Wayland often corresponds to 1.5 in the monitor configuration.
+# The gsettings override is a starting point for the session.
