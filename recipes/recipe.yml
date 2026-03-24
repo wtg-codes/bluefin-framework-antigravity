@@ -1,16 +1,11 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-# image will be published to ghcr.io/<user>/<name>
 name: bluefin-framework-antigravity
-# description will be included in the image's metadata
 description: Highly specialized, cryptographically signed, immutable OS for Framework 13 with Quarantined AI.
 
-# the base image to build on top of (FROM) and the version tag to use
 base-image: ghcr.io/ublue-os/bluefin-dx
-image-version: latest  # latest is also supported if you want new updates ASAP
+image-version: latest
 
-# module configuration, executed in order
-# you can include multiple instances of the same module
 modules:
   - type: files
     files:
@@ -18,42 +13,27 @@ modules:
         destination: /etc
       - source: usr
         destination: /usr
+    # Note: BlueBuild automatically runs glib-compile-schemas on /usr/share/glib-2.0/schemas/
 
   - type: rpm-ostree
     install:
-      - bats  # Install bats for testing during build
+      - bats  # Kept so BATS is available on the live host for post-install validation
 
   - type: kargs
     kargs:
       - amd_pstate=active
       - amdgpu.sg_display=0
 
-  - type: script
-    snippets:
-      - glib-compile-schemas /usr/share/glib-2.0/schemas/
-
-  - type: systemd
-    system:
-      enabled:
-        - fwupd.service
-
-  - type: justfiles  # includes justfiles for declarative setup
+  - type: justfiles
     include:
       - antigravity.just
 
   - type: default-flatpaks
     configurations:
-      - notify: true  # Send notification after install/uninstall is finished (true/false)
+      - notify: true
         scope: system
-        # If no repo information is specified, Flathub will be used by default
-        install:  # system flatpaks we want all users to have and not remove
-          - org.mozilla.firefox
+        install:
           - org.gnome.Loupe
-      - scope: user  # Also add Flathub user repo, but no user packages
+          # Note: Firefox is already baked into Bluefin-DX, removed to prevent redundancy.
 
-  - type: signing  # this sets up the proper policy & signing files for signed images to work fully
-
-  - type: script
-    snippets:
-      - echo "Running OS validation tests..."
-      - bats /usr/share/bluefin-framework/tests/os_validation.bats
+  - type: signing
