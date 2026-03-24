@@ -54,4 +54,4 @@ modules:
   - type: script
     snippets:
       - echo "Running OS validation tests..."
-      - bats /usr/share/bluefin-framework/tests/os_validation.bats
+      - "if [ -f /usr/share/bluefin-framework/tests/os_validation.bats ]; then bats /usr/share/bluefin-framework/tests/os_validation.bats; else echo 'Test file missing!'; exit 1; fi"
