@@ -37,7 +37,7 @@ modules:
 
   - type: justfiles  # includes justfiles for declarative setup
     include:
-      - files/system/usr/share/ublue-os/just/60-antigravity.just
+      - just/antigravity.just
 
   - type: default-flatpaks
     configurations:
