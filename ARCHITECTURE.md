@@ -8,7 +8,7 @@
 **Rationale:** This ensures that AI agents (like Google Antigravity) operate in an isolated environment while having full access to required libraries and a dedicated workspace at `~/.local/share/antigravity-workspace`.
 
 ### ADR 2: ROCm Hardware Passthrough
-**Context:** Local LLM inference requires significant GPU resources and memory access. The target hardware (Framework 13 with Ryzen AI 9) has 96GB of memory with an XDNA 2 NPU and RDNA 3.5 graphics.
+**Context:** Local LLM inference requires significant GPU resources and memory access. The target hardware (Framework 13 with Ryzen AI 300 series) has 96GB of memory with an XDNA 2 NPU and RDNA 3.5 graphics.
 **Decision:** We explicitly pass `/dev/dri` and `/dev/kfd` into the Distrobox container.
 **Rationale:** This allows the quarantined AI agent to leverage the full 96GB memory pool via ROCm (Radeon Open Compute) for local inference without compromising host security or immutability.
 
@@ -21,3 +21,8 @@
 **Context:** The Framework 13 with Ryzen AI 300 series requires specific kernel parameters for optimal power management and display stability.
 **Decision:** We append `amd_pstate=active` and `amdgpu.sg_display=0` to the kernel arguments.
 **Rationale:** `amd_pstate=active` enables the modern AMD P-state driver for better performance/efficiency, and `amdgpu.sg_display=0` addresses specific display issues with the 2.8K panel.
+
+### ADR 5: Test-Driven Infrastructure (TDI)
+**Context:** Changes to the OS must be verified before deployment.
+**Decision:** Implement a BATS test suite that runs against the built OCI image in the CI pipeline.
+**Rationale:** This provides mathematical proof that the OS meets hardware and configuration constraints before pushing to the container registry, preventing regressions in hardware enablement or security policies.
