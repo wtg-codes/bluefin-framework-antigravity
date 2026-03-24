@@ -19,7 +19,8 @@
 }
 
 @test "Justfile is included for declarative setup" {
-    # Check if the justfile exists in the image (it's copied to /usr/share/bluebuild/justfiles/ by the module)
+    # Check if the justfile exists in the image (it's copied to /usr/share/ublue-os/just/ by the module)
+    # The justfiles module copies to /usr/share/bluebuild/justfiles/ and imports them.
     [ -f "/usr/share/bluebuild/justfiles/antigravity.just" ]
 }
 
@@ -29,8 +30,13 @@
     [ -f "/etc/systemd/system/multi-user.target.wants/fwupd.service" ]
 }
 
-@test "Kernel arguments build integrity check" {
-    # Proxy verification: if the script module (glib-compile-schemas) ran,
-    # then the kargs module which precedes it also ran.
+@test "Kernel arguments are correctly configured in bootc" {
+    # The kargs module uses /usr/lib/bootc/kargs.d/ to define kernel arguments.
+    [ -f "/usr/lib/bootc/kargs.d/bluebuild-args.toml" ]
+    grep -q "amd_pstate=active" "/usr/lib/bootc/kargs.d/bluebuild-args.toml"
+    grep -q "amdgpu.sg_display=0" "/usr/lib/bootc/kargs.d/bluebuild-args.toml"
+}
+
+@test "GSettings schemas are compiled" {
     [ -f "/usr/share/glib-2.0/schemas/gschemas.compiled" ]
 }

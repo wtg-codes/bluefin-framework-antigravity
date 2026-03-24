@@ -1,7 +1,6 @@
 # bluefin-framework-antigravity
 
 [![bluebuild build badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml)
-[![yaml-lint badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/yaml-lint.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/yaml-lint.yml)
 
 **bluefin-framework-antigravity** is a highly specialized, cryptographically signed, immutable operating system based on Bluefin-DX, optimized for the Framework Laptop 13 and agentic development workflows.
 
