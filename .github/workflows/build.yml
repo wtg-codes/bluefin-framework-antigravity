@@ -29,7 +29,7 @@ jobs:
           # !! Add your recipes here
           - recipe.yml
     steps:
-      # the build is fully handled by the reusable github action
+      # Build the image without pushing to allow for testing
       - name: Build Custom Image
         uses: blue-build/github-action@v1.11
         id: build
@@ -38,10 +38,22 @@ jobs:
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
+          push: false
 
           # enabled by default, disable if your image is small and you want faster builds
           maximize_build_space: true
 
       - name: Test OS Image
         run: |
-          podman run --rm ${{ steps.build.outputs.image }} bats /usr/share/bluefin-framework/tests/os_validation.bats
+          podman run --rm localhost/bluefin-framework-antigravity:latest bats /usr/share/bluefin-framework/tests/os_validation.bats
+
+      # Push the image only if tests pass
+      - name: Push Custom Image
+        uses: blue-build/github-action@v1.11
+        if: github.event_name != 'pull_request'
+        with:
+          recipe: ${{ matrix.recipe }}
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          push: true
