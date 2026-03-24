@@ -19,21 +19,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  lint:
-    name: Lint YAML
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4.2.2
-      - name: yamllint
-        uses: ibiqlik/action-yamllint@v3
-        with:
-          file_or_dir: .
-          config_file: .yamllint.yml
-          strict: true
-
   bluebuild:
     name: Build Custom Image
-    needs: lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -45,6 +32,16 @@ jobs:
         recipe:
           - recipe.yml
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Lint YAML
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_file: .yamllint.yml
+          strict: true
+
       - name: Build and Push Custom Image
         uses: blue-build/github-action@v1.11.1
         with:
