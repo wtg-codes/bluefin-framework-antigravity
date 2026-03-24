@@ -13,7 +13,7 @@ modules:
         destination: /etc
       - source: usr
         destination: /usr
-    # Note: BlueBuild automatically runs glib-compile-schemas on /usr/share/glib-2.0/schemas/
+  # Note: BlueBuild automatically runs glib-compile-schemas on /usr/share/glib-2.0/schemas/
 
   - type: rpm-ostree
     install:
