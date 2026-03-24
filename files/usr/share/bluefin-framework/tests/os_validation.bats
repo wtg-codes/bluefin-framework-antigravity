@@ -18,14 +18,13 @@
 }
 
 @test "Justfile is included for declarative setup" {
-    # Check both potential locations due to module version variations
-    [ -f "/usr/share/bluebuild/justfiles/antigravity.just" ] || [ -f "/usr/share/ublue-os/just/60-antigravity.just" ]
+    # The justfiles module copies to /usr/share/bluebuild/justfiles/ and imports them.
+    [ -f "/usr/share/bluebuild/justfiles/antigravity.just" ]
 }
 
 @test "fwupd service is enabled for Framework hardware updates" {
-    [ -L "/etc/systemd/system/multi-user.target.wants/fwupd.service" ] || \
-    [ -f "/usr/lib/systemd/system/multi-user.target.wants/fwupd.service" ] || \
-    [ -f "/etc/systemd/system/multi-user.target.wants/fwupd.service" ]
+    # Check if the fwupd service is enabled using systemctl across the root
+    systemctl --root=/ is-enabled fwupd.service
 }
 
 @test "Kernel arguments are correctly configured in bootc" {

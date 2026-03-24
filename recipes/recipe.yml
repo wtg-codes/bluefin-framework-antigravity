@@ -14,8 +14,10 @@ image-version: latest  # latest is also supported if you want new updates ASAP
 modules:
   - type: files
     files:
-      - source: system
-        destination: /  # copies files/system/* into your image's root folder /
+      - source: etc
+        destination: /etc
+      - source: usr
+        destination: /usr
 
   - type: rpm-ostree
     install:
@@ -54,4 +56,4 @@ modules:
   - type: script
     snippets:
       - echo "Running OS validation tests..."
-      - "if [ -f /usr/share/bluefin-framework/tests/os_validation.bats ]; then bats /usr/share/bluefin-framework/tests/os_validation.bats; else echo 'Test file missing!'; exit 1; fi"
+      - bats /usr/share/bluefin-framework/tests/os_validation.bats
