@@ -16,12 +16,10 @@ modules:
     files:
       - source: system
         destination: /  # copies files/system/* into your image's root folder /
-      - source: tests
-        destination: /tests  # copies the tests folder into the image root for validation
 
   - type: rpm-ostree
     install:
-      - bats  # Install bats for testing in CI
+      - bats  # Install bats for testing during build
 
   - type: kargs
     kargs:
@@ -35,11 +33,11 @@ modules:
   - type: systemd
     system:
       enabled:
-        - fwupd
+        - fwupd.service
 
   - type: justfiles  # includes justfiles for declarative setup
     include:
-      - antigravity.just
+      - usr/share/ublue-os/just/antigravity.just
 
   - type: default-flatpaks
     configurations:
@@ -56,4 +54,4 @@ modules:
   - type: script
     snippets:
       - echo "Running OS validation tests..."
-      - bats /tests/os_validation.bats
+      - bats /usr/share/bluefin-framework/tests/os_validation.bats

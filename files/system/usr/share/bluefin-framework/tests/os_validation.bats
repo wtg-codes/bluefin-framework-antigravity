@@ -19,8 +19,8 @@
 }
 
 @test "Justfile is included for declarative setup" {
-    # Check if the justfile exists in the image (it's copied to /usr/share/bluebuild/justfiles/ by the module)
-    [ -f "/usr/share/bluebuild/justfiles/antigravity.just" ]
+    # Check if the justfile exists in the standard location
+    [ -f "/usr/share/ublue-os/just/antigravity.just" ]
 }
 
 @test "fwupd service is enabled for Framework hardware updates" {
