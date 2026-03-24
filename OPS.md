@@ -6,7 +6,7 @@ Before pushing changes to the repository, you can run the BATS test suite locall
 ### Running Tests Locally
 If you have already built the image locally:
 ```bash
-podman run --rm <your_image_name> bats /tests/os_validation.bats
+podman run --rm localhost/bluefin-framework-antigravity:latest bats /tests/os_validation.bats
 ```
 
 ## Disaster Recovery
@@ -34,3 +34,11 @@ rpm-ostree upgrade
 
 ### Updating GitHub Actions
 `dependabot` will automatically create Pull Requests for GitHub Action updates. Review and merge these weekly to ensure CI/CD security and stability.
+
+## CI/CD Pipeline
+The pipeline consists of:
+1. **YAML Linting:** Ensures syntax correctness for all configuration and workflow files.
+2. **BlueBuild:** Compiles the OCI image based on `recipes/recipe.yml`.
+3. **BATS Validation:** Runs the `tests/os_validation.bats` suite against the newly built image.
+4. **Cosign Signing:** Cryptographically signs the image if tests pass.
+5. **Registry Push:** Publishes the signed image to `ghcr.io`.

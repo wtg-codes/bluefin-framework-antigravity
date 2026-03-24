@@ -1,6 +1,8 @@
 name: yaml-lint
 "on":
   push:
+    branches:
+      - main
     paths:
       - '**.yml'
       - '**.yaml'

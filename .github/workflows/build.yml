@@ -5,6 +5,8 @@ name: bluebuild
         "00 06 * * *"  # build at 06:00 UTC every day
         # (20 minutes after last ublue images start building)
   push:
+    branches:
+      - main
     paths-ignore:  # don't rebuild if only documentation has changed
       - "**.md"
 
@@ -26,7 +28,6 @@ jobs:
       fail-fast: false  # stop GH from cancelling all matrix builds if one fails
       matrix:
         recipe:
-          # !! Add your recipes here
           - recipe.yml
     steps:
       # Build the image without pushing to allow for testing
@@ -45,7 +46,7 @@ jobs:
 
       - name: Test OS Image
         run: |
-          podman run --rm localhost/bluefin-framework-antigravity:latest bats /usr/share/bluefin-framework/tests/os_validation.bats
+          podman run --rm localhost/bluefin-framework-antigravity:latest bats /tests/os_validation.bats
 
       # Push the image only if tests pass
       - name: Push Custom Image
