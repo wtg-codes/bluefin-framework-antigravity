@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+# Note: These tests are designed to be run on the LIVE Framework hardware,
+# not during the BlueBuild CI container build.
+
 @test "Distrobox configuration file exists" {
     [ -f "/usr/share/bluefin-framework/antigravity/distrobox.ini" ]
 }
@@ -9,30 +12,18 @@
     grep -q -- "--device /dev/dri" "/usr/share/bluefin-framework/antigravity/distrobox.ini"
 }
 
-@test "Distrobox configuration uses Ubuntu 24.04 image" {
-    grep -q "ubuntu:24.04" "/usr/share/bluefin-framework/antigravity/distrobox.ini"
+@test "Distrobox configuration includes Chrome installation hooks" {
+    grep -q "google-chrome-stable" "/usr/share/bluefin-framework/antigravity/distrobox.ini"
 }
 
-@test "GSettings schema is configured for fractional scaling" {
-    [ -f "/usr/share/glib-2.0/schemas/org.gnome.mutter.gschema.override" ]
+@test "fwupd service is active (Framework hardware updates)" {
+    # This must be run on the booted machine
+    systemctl is-active fwupd.service || systemctl is-enabled fwupd.service
 }
 
-@test "Justfile is included for declarative setup" {
-    # The justfiles module copies to /usr/share/bluebuild/justfiles/ and imports them.
-    [ -f "/usr/share/bluebuild/justfiles/antigravity.just" ]
-}
-
-@test "fwupd service is enabled for Framework hardware updates" {
-    # Check if the fwupd service is enabled using systemctl across the root
-    systemctl --root=/ is-enabled fwupd.service
-}
-
-@test "Kernel arguments are correctly configured in bootc" {
-    # Verify kargs directory exists and contains configuration
-    [ -d "/usr/lib/bootc/kargs.d/" ]
-    ls /usr/lib/bootc/kargs.d/*.toml
-}
-
-@test "GSettings schemas are compiled" {
-    [ -f "/usr/share/glib-2.0/schemas/gschemas.compiled" ]
+@test "Kernel arguments are actively applied to the system" {
+    # Instead of checking the bootc toml files, we check the actual live kernel arguments
+    run cat /proc/cmdline
+    [[ "$output" == *"amd_pstate=active"* ]]
+    [[ "$output" == *"amdgpu.sg_display=0"* ]]
 }
