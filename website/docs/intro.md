@@ -18,3 +18,32 @@
 
 ## Build Visualization
 ![System Build Visualization](/img/screenshot.png)
+
+## Installation
+
+To rebase an existing atomic Fedora installation to this image:
+
+1. **Rebase to the unsigned image**:
+   ```bash
+   rpm-ostree rebase ostree-unverified-registry:ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
+   ```
+2. **Reboot**:
+   ```bash
+   systemctl reboot
+   ```
+3. **Rebase to the signed image**:
+   ```bash
+   rpm-ostree rebase ostree-image-signed:docker://ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
+   ```
+4. **Reboot**:
+   ```bash
+   systemctl reboot
+   ```
+
+## Setup Antigravity AI Quarantine
+
+After installation, initialize the isolated AI environment:
+
+```bash
+ujust setup-antigravity
+```
