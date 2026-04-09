@@ -1,4 +1,4 @@
-name: GitHub Pages
+name: GitHub Pages Dashboard
 
 on:
   workflow_run:
@@ -9,11 +9,7 @@ on:
     branches:
       - main
     paths:
-      - 'website/**'
-      - 'docs/**'
-      - 'ARCHITECTURE.md'
-      - 'OPS.md'
-      - 'SECURITY.md'
+      - 'scripts/generate_dashboard.sh'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -34,18 +30,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-          cache-dependency-path: website/package-lock.json
-
-      - name: Install dependencies
-        run: cd website && npm ci
-
-      - name: Build Docusaurus
-        run: cd website && npm run build
+      - name: Generate Dashboard
+        run: |
+          mkdir -p public
+          bash scripts/generate_dashboard.sh > public/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -53,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './website/build'
+          path: './public'
 
       - name: Deploy to GitHub Pages
         id: deployment

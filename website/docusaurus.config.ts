@@ -35,9 +35,6 @@ const config: Config = {
     locales: ['en'],
   },
 
-  plugins: [
-    'docusaurus-plugin-image-zoom',
-  ],
   presets: [
     [
       'classic',
@@ -49,7 +46,21 @@ const config: Config = {
           editUrl:
             'https://github.com/wtg-codes/bluefin-framework-antigravity/tree/main/website/',
         },
-        blog: false,
+        blog: {
+          showReadingTime: true,
+          feedOptions: {
+            type: ['rss', 'atom'],
+            xslt: true,
+          },
+          // Please change this to your repo.
+          // Remove this to remove the "edit this page" links.
+          editUrl:
+            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // Useful options to enforce blogging best practices
+          onInlineTags: 'warn',
+          onInlineAuthors: 'warn',
+          onUntruncatedBlogPosts: 'warn',
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -58,15 +69,6 @@ const config: Config = {
   ],
 
   themeConfig: {
-    zoom: {
-      selector: '.markdown :not(em) > img',
-      config: {
-        background: {
-          light: 'rgb(255, 255, 255)',
-          dark: 'rgb(50, 50, 50)'
-        }
-      }
-    },
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     colorMode: {
