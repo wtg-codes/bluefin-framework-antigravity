@@ -1,8 +1,12 @@
 # bluefin-framework-antigravity
 
 [![bluebuild build badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml)
+[![GitHub Pages](https://img.shields.io/badge/Dashboard-GitHub%20Pages-blue)](https://wtg-codes.github.io/bluefin-framework-antigravity/)
 
 **bluefin-framework-antigravity** is a highly specialized, cryptographically signed, immutable operating system based on Bluefin-DX, optimized for the Framework Laptop 13 and agentic development workflows.
+
+> [!TIP]
+> **View the [Live Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/) for build status, latest images, and detailed installation guides.**
 
 ## Target Hardware Manifest (Zero Compromises)
 * **System:** Framework Laptop 13
