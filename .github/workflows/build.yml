@@ -33,7 +33,7 @@ jobs:
           - recipe.yml
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
 
       - name: Lint YAML
         uses: ibiqlik/action-yamllint@v3
@@ -43,7 +43,7 @@ jobs:
           strict: true
 
       - name: Build and Push Custom Image
-        uses: blue-build/github-action@a8aa75e1205d80a70e8fa2ca30231da6af58d985
+        uses: blue-build/github-action@c98a71685dcc2fc79d290a09e4a6cb079b05801e
         with:
           recipe: ${{ matrix.recipe }}
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}

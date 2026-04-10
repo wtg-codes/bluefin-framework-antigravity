@@ -1,44 +1,30 @@
-# OPS.md: Operations Runbook
+---
+sidebar_position: 3
+---
 
-## Local Validation
-Before pushing changes to the repository, you can run the BATS test suite locally if you have `bats` and `podman` installed.
+# OPS.md: Operations & Lifecycle Management
 
-### Running Tests Locally
-If you have already built the image locally:
-```bash
-podman run --rm localhost/bluefin-framework-antigravity:latest bats /tests/os_validation.bats
-```
+## Continuous Deployment
+This repository uses a fully automated CI/CD pipeline.
+*   **Daily Builds:** The OS image is rebuilt every day at 06:00 UTC to pull in the latest upstream security updates from Bluefin and Fedora.
+*   **On-Push Deployment:** Any changes to the `recipe.yml`, `modules/`, or `files/` directories trigger an immediate build and push to the GitHub Container Registry (GHCR).
+*   **Documentation Updates:** The [GitHub Pages site](https://wtg-codes.github.io/bluefin-framework-antigravity/) is automatically updated whenever the image build succeeds or documentation files are modified.
 
-## Disaster Recovery
+## System Maintenance
+Since this is an immutable OS, standard maintenance tasks are handled differently:
+*   **Updates:** Updates are downloaded in the background. To apply them, simply reboot your system.
+*   **Rollbacks:** If an update causes issues, you can easily rollback to the previous version from the GRUB menu or by running:
+    ```bash
+    rpm-ostree rollback
+    ```
+*   **Health Checks:** The `ujust setup-antigravity` command can be re-run at any time to verify the state of your AI quarantine environment and hardware passthrough configuration.
 
-### Rolling Back
-Since the OS is atomic, rolling back to a previous "known-good" version is straightforward:
-```bash
-rpm-ostree rollback
-```
+## Hardware Validation
+The BATS test suite at `tests/os_validation.bats` is the source of truth for system health. It validates:
+*   Kernel arguments (`amd_pstate`, `amdgpu`).
+*   Systemd service status.
+*   Hardware availability (`/dev/dri`, `/dev/kfd`).
+*   Immutability constraints.
 
-### Resetting Antigravity Workspace
-If the AI quarantine environment becomes corrupted, you can delete the workspace and recreate it:
-```bash
-rm -rf ~/.local/share/antigravity-workspace
-ujust setup-antigravity
-```
-
-## Maintenance
-
-### Updating the Image
-The image is rebuilt daily via GitHub Actions. To update your local system:
-```bash
-rpm-ostree upgrade
-```
-
-### Updating GitHub Actions
-`dependabot` will automatically create Pull Requests for GitHub Action updates. Review and merge these weekly to ensure CI/CD security and stability.
-
-## CI/CD Pipeline
-The pipeline consists of:
-1. **YAML Linting:** Ensures syntax correctness for all configuration and workflow files.
-2. **BlueBuild:** Compiles the OCI image based on `recipes/recipe.yml`.
-3. **BATS Validation:** Runs the `tests/os_validation.bats` suite against the newly built image.
-4. **Cosign Signing:** Cryptographically signs the image if tests pass.
-5. **Registry Push:** Publishes the signed image to `ghcr.io`.
+## Monitoring
+Refer to the [System Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/dashboard) for the current status of the latest image builds, including duration, success/failure logs, and commit metadata.
