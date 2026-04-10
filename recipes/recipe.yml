@@ -13,7 +13,6 @@ modules:
         destination: /etc
       - source: usr
         destination: /usr
-  # Note: BlueBuild automatically runs glib-compile-schemas on /usr/share/glib-2.0/schemas/
 
   - type: rpm-ostree
     install:
@@ -34,6 +33,5 @@ modules:
         scope: system
         install:
           - org.gnome.Loupe
-          # Note: Firefox is already baked into Bluefin-DX, removed to prevent redundancy.
 
   - type: signing
