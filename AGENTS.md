@@ -28,3 +28,4 @@ The CI/CD pipeline must mathematically prove the OS image meets our hardware con
 - **Single Source of Truth (SSOT):** Documentation duplication is avoided by using MDX imports. Root files (README.md, etc.) are imported into `website/docs/` using `.mdx` extensions and the `import Content from '...'` pattern.
 - **Hardware Manifest Synchronization:** Shared hardware specs are stored in `shared/manifest.md` and imported into all relevant documentation files to ensure consistency across the OS build.
 - **BlueBuild Schema Compilation:** BlueBuild automatically runs `glib-compile-schemas` on `/usr/share/glib-2.0/schemas/`. Manual script modules for this purpose are redundant and should be avoided.
+- **SLSA Build Provenance:** The image build process is secured with SLSA Level 3 provenance via `actions/attest-build-provenance`. This ensures that every image pushed to GHCR has a verifiable cryptographic link to the specific GitHub Action run that produced it.

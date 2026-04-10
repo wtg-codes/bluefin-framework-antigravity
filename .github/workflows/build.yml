@@ -23,6 +23,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
+      attestations: write
     strategy:
       fail-fast: false
       matrix:
@@ -40,6 +41,7 @@ jobs:
           strict: true
 
       - name: Build and Push Custom Image
+        id: build
         uses: blue-build/github-action@c98a71685dcc2fc79d290a09e4a6cb079b05801e
         with:
           recipe: ${{ matrix.recipe }}
@@ -48,3 +50,11 @@ jobs:
           pr_event_number: ${{ github.event.number }}
           push: ${{ github.event_name != 'pull_request' }}
           maximize_build_space: true
+
+      - name: Attest Build Provenance
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true

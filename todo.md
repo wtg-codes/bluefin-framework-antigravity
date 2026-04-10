@@ -8,5 +8,6 @@
 6. [ ] Fix hardcoded repository URL in `website/src/pages/dashboard.tsx`.
 7. [ ] Add BATS test for `amd_pstate` kernel argument validation.
 8. [ ] Synchronize `tests/os_validation.bats` with the internal image copy.
-9. [ ] Resolve `cosign` version validation bug in `blue-build/github-action`.
+9. [x] Resolve `cosign` version validation bug in `blue-build/github-action`.
 10. [ ] Standardize YAML indentation in all workflow files.
+11. [x] Implement SLSA Build Provenance and Artifact Attestations.
