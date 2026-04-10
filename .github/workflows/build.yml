@@ -3,20 +3,17 @@ name: bluebuild
   schedule:
     - cron:
         "00 06 * * *"  # build at 06:00 UTC every day
-        # (20 minutes after last ublue images start building)
   push:
     branches:
       - main
     paths-ignore:
       - "**.md"
+      - "website/**"
   pull_request:
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   bluebuild:
@@ -33,7 +30,7 @@ jobs:
           - recipe.yml
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
 
       - name: Lint YAML
         uses: ibiqlik/action-yamllint@v3

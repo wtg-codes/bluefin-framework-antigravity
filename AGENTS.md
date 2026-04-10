@@ -21,3 +21,10 @@ The CI/CD pipeline must mathematically prove the OS image meets our hardware con
 - All changes must be verified via the BATS suite in `tests/os_validation.bats`.
 - CI/CD must run these tests using `podman run` before pushing.
 - Documentation (ARCHITECTURE.md, README.md, SECURITY.md, OPS.md) must be kept up to date.
+
+## Technical Learnings & Patterns
+- **GitHub Action Versioning:** Do not use `actions/checkout@v6.0.2`; it is invalid. Use `actions/checkout@v4` for stability.
+- **Node.js Environment:** The Docusaurus 3.10.0 website with `@docusaurus/faster` requires Node.js v22. Ensure CI workflows (`pages.yml`) are pinned to this version.
+- **Single Source of Truth (SSOT):** Documentation duplication is avoided by using MDX imports. Root files (README.md, etc.) are imported into `website/docs/` using `.mdx` extensions and the `import Content from '...'` pattern.
+- **Hardware Manifest Synchronization:** Shared hardware specs are stored in `shared/manifest.md` and imported into all relevant documentation files to ensure consistency across the OS build.
+- **BlueBuild Schema Compilation:** BlueBuild automatically runs `glib-compile-schemas` on `/usr/share/glib-2.0/schemas/`. Manual script modules for this purpose are redundant and should be avoided.

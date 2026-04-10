@@ -88,7 +88,7 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        {to: '/dashboard', label: 'Dashboard', position: 'left'},
+        {to: '/docs/dashboard', label: 'Dashboard', position: 'left'},
         {
           href: 'https://github.com/wtg-codes/bluefin-framework-antigravity',
           label: 'GitHub',
