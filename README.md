@@ -6,7 +6,13 @@
 **bluefin-framework-antigravity** is a highly specialized, cryptographically signed, immutable operating system based on Bluefin-DX, optimized for the Framework Laptop 13 and agentic development workflows.
 
 > [!TIP]
-> **View the [Live Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/) for build status, latest images, and detailed installation guides.**
+> **View the [Live Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/dashboard) for build status, latest images, and detailed installation guides.**
+
+## Documentation
+- 🛠️ **[Architecture (ADRs)](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/architecture)** - Architectural Decision Records and system design.
+- 🛡️ **[Security Model](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/security)** - Threat model and mitigation strategies.
+- 📖 **[Operations Runbook](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/ops)** - Maintenance, updates, and disaster recovery.
+- 💻 **[Hardware Manifest](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/intro#target-hardware-manifest-zero-compromises)** - Detailed hardware specifications.
 
 ## Target Hardware Manifest (Zero Compromises)
 import Manifest from './shared/manifest.md';
