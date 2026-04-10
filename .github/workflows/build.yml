@@ -1,3 +1,4 @@
+---
 name: bluebuild
 "on":
   schedule:
@@ -10,29 +11,21 @@ name: bluebuild
       - "**.md"
       - "website/**"
   pull_request:
+    paths-ignore:
+      - "**.md"
+      - "website/**"
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  bluebuild:
-    name: Build Custom Image
+  lint:
+    name: Lint YAML
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-      attestations: write
-    strategy:
-      fail-fast: false
-      matrix:
-        recipe:
-          - recipe.yml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Lint YAML
         uses: ibiqlik/action-yamllint@v3
         with:
@@ -40,21 +33,42 @@ jobs:
           config_file: .yamllint.yml
           strict: true
 
+  bluebuild:
+    name: Build Custom Image
+    needs: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Build and Push Custom Image
         id: build
         uses: blue-build/github-action@c98a71685dcc2fc79d290a09e4a6cb079b05801e
         with:
-          recipe: ${{ matrix.recipe }}
+          recipe: recipe.yml
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
           push: ${{ github.event_name != 'pull_request' }}
           maximize_build_space: true
 
+      - name: Fetch Image Digest
+        id: get-digest
+        if: github.event_name != 'pull_request'
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}:latest"
+          DIGEST=$(skopeo inspect --creds="${{ github.actor }}:${{ github.token }}" docker://$IMAGE | jq -r '.Digest')
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+
       - name: Attest Build Provenance
         if: github.event_name != 'pull_request'
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ghcr.io/${{ github.repository }}
-          subject-digest: ${{ steps.build.outputs.digest }}
+          subject-digest: ${{ steps.get-digest.outputs.digest }}
           push-to-registry: true

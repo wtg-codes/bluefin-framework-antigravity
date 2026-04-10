@@ -1,15 +1,14 @@
+---
 name: GitHub Pages
 
 on:
-  workflow_run:
-    workflows: ["bluebuild"]
-    types: [completed]
-    branches: [main]
   push:
     branches:
       - main
     paths:
       - 'website/**'
+      - '*.md'
+      - 'shared/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -20,11 +19,10 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

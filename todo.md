@@ -11,3 +11,12 @@
 9. [x] Resolve `cosign` version validation bug in `blue-build/github-action`.
 10. [ ] Standardize YAML indentation in all workflow files.
 11. [x] Implement SLSA Build Provenance and Artifact Attestations.
+
+## Additional CI/CD & Security Improvements
+- [ ] Expand Dependabot Coverage: Add npm ecosystem for `website/`.
+- [ ] Consolidate Chrome Installation: Use declarative `additional_packages` in `distrobox.ini`.
+- [ ] Add Formatting/Linting Scripts: Update `website/package.json` with Prettier/ESLint.
+- [ ] Use `$HOME` instead of `~`: Update paths in `distrobox.ini`.
+- [ ] Require YAML Document Starts: Enable `document-start` in `.yamllint.yml` and update files.
+- [ ] Fix hardcoded Dashboard URL: Pull dynamically from Docusaurus config (resolves item #6).
+- [ ] Recursive To-do Updates: Ensure the to-do list is updated at the end of every session.
