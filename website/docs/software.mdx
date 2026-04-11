@@ -1,0 +1,24 @@
+# Software Management
+
+Bluefin Framework Antigravity follows a "Strict Immutability" policy. The host system is kept clean, with all user software managed through isolated channels.
+
+## Inherited from Bluefin-DX
+
+As a derivative of **Bluefin-DX**, this spin inherits all the powerful developer-focused features of the upstream project:
+- **Developer Tools:** Pre-configured for containers and cloud-native development.
+- **Just Task Runner:** A massive library of `ujust` commands for system management.
+- **Tailscale:** Integrated for easy secure networking.
+
+## The "Strict" Policy
+
+To ensure system stability and security, we enforce the following:
+1. **Zero Host GUI Packages:** All graphical applications should be installed via **Flathub**.
+2. **Zero Host CLI Tools:** All development tools and command-line utilities should be installed via **Homebrew** or within a **Distrobox**.
+3. **No RPMs in Recipe:** We avoid adding `.rpm` packages to the OS image unless strictly required for hardware enablement.
+
+## Essential Commands
+
+- **Search for Flatpaks:** `flatpak search <name>`
+- **Install from Homebrew:** `brew install <formula>`
+- **System Updates:** `rpm-ostree upgrade`
+- **Bluefin Shortcuts:** Run `ujust` to see a list of all available automation scripts.
