@@ -1,0 +1,36 @@
+# Quarantined AI (Antigravity)
+
+The core feature of this spin is the **Antigravity AI Quarantine**. This environment allows autonomous AI agents to operate in a safe, isolated, yet high-performance container.
+
+## Architecture
+
+We use **Distrobox** to create a declarative Ubuntu 24.04 FHS environment. This provides:
+- **Isolation:** The agent cannot modify the host's immutable root filesystem.
+- **Performance:** Direct hardware access via ROCm.
+- **Workspace:** A dedicated workspace at `~/.local/share/antigravity-workspace`.
+
+## Hardware Passthrough (ROCm)
+
+To enable local LLM inference and agentic workflows, the container has access to:
+- **`/dev/dri`**: Direct Rendering Infrastructure for GPU acceleration.
+- **`/dev/kfd`**: Kernel Fusion Driver for ROCm compute workloads.
+
+This allows the agent to leverage the **RDNA 3.5 Graphics** and **XDNA 2 NPU** on the Ryzen AI 300 processor.
+
+## Usage
+
+To enter the AI environment:
+
+```bash
+distrobox enter antigravity
+```
+
+Or use the provided `ujust` command to reset/setup the environment:
+
+```bash
+ujust setup-antigravity
+```
+
+## Security Model
+
+The Antigravity agent operates with restricted permissions. Even if the agent attempts to use `sudo` within the container, it remains trapped within the Distrobox environment and cannot compromise the underlying Bluefin-DX host.
