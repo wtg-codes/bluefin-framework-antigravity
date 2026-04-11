@@ -5,6 +5,16 @@ import Manifest from './shared/manifest.md';
 
 <Manifest />
 
+## Performance Optimizations
+
+### OS-Level Performance
+The OS image is tuned for the Framework Laptop 13 (Ryzen AI 9 HX 370) with the following kernel arguments:
+*   `amd_pstate=active`: Enables the active EPP (Energy Performance Preference) driver for superior power management and performance on Zen 5 architecture.
+*   `amdgpu.sg_display=0`: Disables scatter-gather display support to resolve flickering issues on certain high-resolution Framework panels.
+
+### Documentation Build Performance
+The documentation site (`website/`) uses **Docusaurus 3.10.0** with the **@docusaurus/faster** plugin. This replaces the standard Webpack-based build system with **Rspack**, providing significantly faster cold starts and incremental builds.
+
 ## Local Validation
 Before pushing changes to the repository, you can run the BATS test suite locally if you have `bats` and `podman` installed.
 
@@ -37,8 +47,8 @@ The image is rebuilt daily via GitHub Actions. To update your local system:
 rpm-ostree upgrade
 ```
 
-### Updating GitHub Actions
-`dependabot` will automatically create Pull Requests for GitHub Action updates. Review and merge these weekly to ensure CI/CD security and stability.
+### Updating GitHub Actions & Website Dependencies
+`dependabot` will automatically create Pull Requests for GitHub Action and npm package updates. Review and merge these weekly to ensure CI/CD security, stability, and performance.
 
 ## CI/CD Pipeline
 The pipeline consists of:
