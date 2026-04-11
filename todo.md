@@ -19,4 +19,12 @@
 - [ ] Use `$HOME` instead of `~`: Update paths in `distrobox.ini`.
 - [ ] Require YAML Document Starts: Enable `document-start` in `.yamllint.yml` and update files.
 - [ ] Fix hardcoded Dashboard URL: Pull dynamically from Docusaurus config (resolves item #6).
-- [x] Recursive To-do Updates: Ensure the to-do list is updated at the end of every session.
+- [ ] Recursive To-do Updates: Ensure the to-do list is updated at the end of every session.
+
+## Documentation Improvements (Completed)
+- [x] Restructure sidebar into logical categories (Introduction, Getting Started, Hardware, Usage, Technical Reference).
+- [x] Create comprehensive 'Installation & Setup' guide.
+- [x] Create detailed 'Hardware Optimization' page for Framework 13 Ryzen AI 300.
+- [x] Create 'Quarantined AI (Antigravity)' guide explaining Distrobox and ROCm.
+- [x] Create 'Software Management' policy guide (Flatpak/Homebrew).
+- [x] Ensure SSOT via MDX imports for architecture, security, and ops.
