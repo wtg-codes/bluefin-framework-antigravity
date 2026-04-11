@@ -29,3 +29,9 @@ The CI/CD pipeline must mathematically prove the OS image meets our hardware con
 - **Hardware Manifest Synchronization:** Shared hardware specs are stored in `shared/manifest.md` and imported into all relevant documentation files to ensure consistency across the OS build.
 - **BlueBuild Schema Compilation:** BlueBuild automatically runs `glib-compile-schemas` on `/usr/share/glib-2.0/schemas/`. Manual script modules for this purpose are redundant and should be avoided.
 - **SLSA Build Provenance:** The image build process is secured with SLSA Level 3 provenance via `actions/attest-build-provenance`. This ensures that every image pushed to GHCR has a verifiable cryptographic link to the specific GitHub Action run that produced it.
+
+## Learnings & Session Observations
+- **Dependabot Strategy:** Expanded ecosystem coverage to include `npm` for the documentation site. This ensures that transitive dependencies in the Docusaurus/Rspack stack are monitored.
+- **Security Visibility:** Explicitly documented SLSA Level 3 provenance and artifact attestations in `SECURITY.md` to match the technical implementation in the build workflow.
+- **Performance Documentation:** Linked hardware-specific kernel arguments (`amd_pstate`) and build-system optimizations (`@docusaurus/faster`) in `OPS.md` to provide a clear performance profile of the OS.
+- **Recursive To-do Updates:** Maintaining a consistent state of the `todo.md` file is critical for continuity across sessions.

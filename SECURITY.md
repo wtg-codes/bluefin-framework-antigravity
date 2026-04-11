@@ -15,8 +15,9 @@ import Manifest from './shared/manifest.md';
 *   **Threat:** Malicious code injected into the OS image during the build process.
 *   **Mitigation:**
     *   **Cryptographic Signing:** Every build is signed using `cosign` and the keys are managed via GitHub Secrets.
-    *   **SLSA Level 3 Compliance:** The build process is automated via BlueBuild Workshop, ensuring a transparent and verifiable supply chain.
-    *   **Automated Updates:** `dependabot` and `pull` apps ensure that all upstream components and GitHub Actions are kept up-to-date with the latest security patches.
+    *   **SLSA Build Provenance:** We implement **SLSA Build Provenance and Artifact Attestations** via `actions/attest-build-provenance`. This provides a cryptographically verifiable link between the final OCI image and the specific GitHub Action run that produced it.
+    *   **Automated Dependency Updates:** `dependabot` is configured to scan and update GitHub Actions and the `npm` ecosystem for the documentation site weekly, ensuring all upstream components are current.
+    *   **Automated Updates:** The `pull` app (if configured) ensures that upstream components are kept up-to-date with the latest security patches.
 
 ### T3: Unauthorized Hardware Access
 *   **Threat:** Isolated containers accessing hardware they shouldn't.

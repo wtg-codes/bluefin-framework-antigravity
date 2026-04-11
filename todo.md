@@ -13,7 +13,7 @@
 11. [x] Implement SLSA Build Provenance and Artifact Attestations.
 
 ## Additional CI/CD & Security Improvements
-- [ ] Expand Dependabot Coverage: Add npm ecosystem for `website/`.
+- [x] Expand Dependabot Coverage: Add npm ecosystem for `website/`.
 - [ ] Consolidate Chrome Installation: Use declarative `additional_packages` in `distrobox.ini`.
 - [ ] Add Formatting/Linting Scripts: Update `website/package.json` with Prettier/ESLint.
 - [ ] Use `$HOME` instead of `~`: Update paths in `distrobox.ini`.
