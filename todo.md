@@ -11,6 +11,7 @@
 9. [x] Resolve `cosign` version validation bug in `blue-build/github-action`.
 10. [ ] Standardize YAML indentation in all workflow files.
 11. [x] Implement SLSA Build Provenance and Artifact Attestations.
+12. [ ] Implement Antigravity ISO Forge (Phase 1-4)
 
 ## Additional CI/CD & Security Improvements
 - [x] Expand Dependabot Coverage: Add npm ecosystem for `website/`.
