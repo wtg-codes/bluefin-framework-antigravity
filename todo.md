@@ -1,25 +1,27 @@
 # TODO: bluefin-framework-antigravity Improvements
 
-1. [x] Fix invalid `actions/checkout@v6.0.2` in `build.yml` (pinned to `v4`).
+1. [x] Fix invalid `actions/checkout@v4` versioning (pinned to stable `v4`).
 2. [x] Implement "Single Source of Truth" for documentation via MDX imports.
 3. [x] Migrate Build Dashboard to Docusaurus build pipeline.
 4. [x] Remove redundant `glib-compile-schemas` comments from `recipe.yml`.
-5. [ ] Update `distrobox.ini` to use declarative `additional_packages` for Chrome.
-6. [ ] Fix hardcoded repository URL in `website/src/pages/dashboard.tsx`.
-7. [ ] Add BATS test for `amd_pstate` kernel argument validation.
-8. [ ] Synchronize `tests/os_validation.bats` with the internal image copy.
+5. [x] Update `distrobox.ini` to use declarative `additional_packages` for Chrome.
+6. [x] Fix hardcoded repository URL in `website/src/components/Dashboard/index.tsx`.
+7. [x] Add BATS test for `amd_pstate` kernel argument validation.
+8. [x] Synchronize `tests/os_validation.bats` with the internal image copy.
 9. [x] Resolve `cosign` version validation bug in `blue-build/github-action`.
-10. [ ] Standardize YAML indentation in all workflow files.
+10. [x] Standardize YAML document starts in all configuration and workflow files.
 11. [x] Implement SLSA Build Provenance and Artifact Attestations.
+12. [x] Complete Level 10 Performance Review.
 
 ## Additional CI/CD & Security Improvements
 - [x] Expand Dependabot Coverage: Add npm ecosystem for `website/`.
-- [ ] Consolidate Chrome Installation: Use declarative `additional_packages` in `distrobox.ini`.
-- [ ] Add Formatting/Linting Scripts: Update `website/package.json` with Prettier/ESLint.
-- [ ] Use `$HOME` instead of `~`: Update paths in `distrobox.ini`.
-- [ ] Require YAML Document Starts: Enable `document-start` in `.yamllint.yml` and update files.
-- [ ] Fix hardcoded Dashboard URL: Pull dynamically from Docusaurus config (resolves item #6).
-- [ ] Recursive To-do Updates: Ensure the to-do list is updated at the end of every session.
+- [x] Consolidate Chrome Installation: Use declarative `additional_packages` in `distrobox.ini`.
+- [x] Add Formatting/Linting Scripts: Update `website/package.json` with Prettier/ESLint.
+- [x] Use `$HOME` instead of `~`: Update paths in `distrobox.ini`.
+- [x] Require YAML Document Starts: Enable `document-start` in `.yamllint.yml` and update files.
+- [x] Recursive To-do Updates: Ensure the to-do list is updated at the end of every session.
+- [ ] Implement Prettier/ESLint automation in CI.
+- [ ] Expand BATS suite to include Homebrew/Flatpak policy validation.
 
 ## Documentation Improvements (Completed)
 - [x] Restructure sidebar into logical categories (Introduction, Getting Started, Hardware, Usage, Technical Reference).

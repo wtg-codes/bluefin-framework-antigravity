@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
-const REPO = 'wtg-codes/bluefin-framework-antigravity';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 export default function Dashboard() {
+  const { siteConfig } = useDocusaurusContext();
+  const REPO = `${siteConfig.organizationName}/${siteConfig.projectName}`;
   const [workflowRuns, setWorkflowRuns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +18,7 @@ export default function Dashboard() {
         console.error('Failed to fetch workflow runs', err);
         setLoading(false);
       });
-  }, []);
+  }, [REPO]);
 
   return (
     <section className="margin-vert--lg">
