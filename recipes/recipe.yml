@@ -18,6 +18,11 @@ modules:
     install:
       - bats  # Kept so BATS is available on the live host for post-install validation
 
+  - type: systemd
+    system:
+      enable:
+        - podman.socket
+
   - type: kargs
     kargs:
       - amd_pstate=active
@@ -33,5 +38,9 @@ modules:
         scope: system
         install:
           - org.gnome.Loupe
+          - com.visualstudio.code
+          - com.google.Chrome
+          - com.slack.Slack
+          - com.discordapp.Discord
 
   - type: signing
