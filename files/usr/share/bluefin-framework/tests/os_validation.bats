@@ -2,58 +2,39 @@
 
 # wtgOS Validation Suite
 # This suite verifies the integrity of the wtgOS image and its student workspace configuration.
-# It is designed to be run both locally in the build tree and on the LIVE Framework hardware.
-
-setup() {
-    if [ -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]; then
-        export DISTROBOX_INI="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
-        export IS_LIVE=1
-    else
-        export DISTROBOX_INI="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
-        export IS_LIVE=0
-    fi
-}
 
 @test "Distrobox configuration file exists" {
-    [ -f "$DISTROBOX_INI" ]
+    # Check both system path (for CI/Live) and repository path (for local dev)
+    [ -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ] || [ -f "files/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]
 }
 
 @test "Distrobox configuration uses the declarative wtg-workspace image" {
-    grep -q "image=ghcr.io/wtg-codes/wtg-workspace:latest" "$DISTROBOX_INI"
+    FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q "image=ghcr.io/wtg-codes/wtg-workspace:latest" "$FILE"
 }
 
 @test "Distrobox configuration contains required hardware passthrough" {
-    grep -q -- "--device /dev/kfd" "$DISTROBOX_INI"
-    grep -q -- "--device /dev/dri" "$DISTROBOX_INI"
+    FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q -- "--device /dev/kfd" "$FILE"
+    grep -q -- "--device /dev/dri" "$FILE"
 }
 
 @test "Distrobox configuration enables native Podman with init system" {
-    grep -q "init=true" "$DISTROBOX_INI"
-    ! grep -q "/run/user/1000/podman/podman.sock" "$DISTROBOX_INI"
-}
-
-@test "fwupd service is active (Framework hardware updates)" {
-    [ "$IS_LIVE" -eq 1 ] || skip "Not on live system"
-    systemctl is-active fwupd.service || systemctl is-enabled fwupd.service
-}
-
-@test "Kernel arguments are actively applied to the system" {
-    [ "$IS_LIVE" -eq 1 ] || skip "Not on live system"
-    run cat /proc/cmdline
-    [[ "$output" == *"amd_pstate=active"* ]]
-    [[ "$output" == *"amdgpu.sg_display=0"* ]]
+    FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q "init=true" "$FILE"
+    ! grep -q "/run/user/1000/podman/podman.sock" "$FILE"
 }
 
 @test "Kernel arguments are actively applied (simulated)" {
-    if [ -f "recipes/recipe.yml" ]; then
-        grep -q "amd_pstate=active" "recipes/recipe.yml"
-    else
-        grep -q "amd_pstate=active" "/usr/etc/bluebuild/recipes/recipe.yml"
-    fi
+    # This checks the recipe which is copied into the image
+    grep -q "amd_pstate=active" "/usr/etc/bluebuild/recipes/recipe.yml" || grep -q "amd_pstate=active" "recipes/recipe.yml"
 }
 
 @test "Workspace Containerfile logic check" {
-    [ "$IS_LIVE" -eq 0 ] || skip "Not in build tree"
+    # Check if we correctly modified the source before building
     [ -f "files/workspace/Containerfile" ] && grep -q "antigravity" "files/workspace/Containerfile"
 }
 
@@ -83,4 +64,22 @@ setup() {
     [ ! -f "$RECIPE" ] && RECIPE="recipes/recipe.yml"
     grep -q "com.visualstudio.code" "$RECIPE"
     grep -q "com.google.Chrome" "$RECIPE"
+}
+
+@test "fwupd service is active (Framework hardware updates)" {
+    # This must be run on the booted machine
+    if [ ! -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]; then
+        skip "Not on live system"
+    fi
+    systemctl is-active fwupd.service || systemctl is-enabled fwupd.service
+}
+
+@test "Kernel arguments are actively applied to the system" {
+    # Instead of checking the bootc toml files, we check the actual live kernel arguments
+    if [ ! -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]; then
+        skip "Not on live system"
+    fi
+    run cat /proc/cmdline
+    [[ "$output" == *"amd_pstate=active"* ]]
+    [[ "$output" == *"amdgpu.sg_display=0"* ]]
 }

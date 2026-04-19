@@ -5,6 +5,7 @@ The core feature of this spin is the **wtgOS AI Quarantine**. This environment a
 ## Architecture
 
 We use **Distrobox** to create a declarative Ubuntu 24.04 FHS environment. This provides:
+
 - **Isolation:** The agent cannot modify the host's immutable root filesystem.
 - **Performance:** Direct hardware access via ROCm.
 - **Workspace:** A dedicated workspace at `~/.local/share/antigravity-workspace`.
@@ -12,6 +13,7 @@ We use **Distrobox** to create a declarative Ubuntu 24.04 FHS environment. This 
 ## Hardware Passthrough (ROCm)
 
 To enable local LLM inference and agentic workflows, the container has access to:
+
 - **`/dev/dri`**: Direct Rendering Infrastructure for GPU acceleration.
 - **`/dev/kfd`**: Kernel Fusion Driver for ROCm compute workloads.
 

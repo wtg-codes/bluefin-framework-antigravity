@@ -14,8 +14,10 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libasound2t64 \
     python3-pip \
+    pipx \
     nodejs \
     npm \
+    apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install Google Chrome for agent-based browsing
@@ -31,11 +33,11 @@ RUN mkdir -p /etc/apt/keyrings \
 
 # Apply wrappers for Electron/Chrome stability in containers
 RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
-    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
+    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
     && chmod +x /usr/bin/google-chrome-stable \
     && if [ -f /usr/bin/antigravity ]; then \
        mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
-       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
+       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
        && chmod +x /usr/bin/antigravity; \
     fi
 
@@ -48,8 +50,10 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN curl -sS https://webi.sh/k9s | sh && mv /root/.local/bin/k9s /usr/local/bin/k9s
 
 # Install helm
-RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
-    && bash get_helm.sh && rm get_helm.sh
+RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list \
+    && apt-get update \
+    && apt-get install -y helm
 
 # Install kind
 RUN curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 \
@@ -61,6 +65,7 @@ RUN npm install -g @google/gemini-cli
 
 # Google ADK (Agent Development Kit)
 # Using --ignore-installed to resolve PyYAML conflict observed in CI
-RUN pip install --break-system-packages --ignore-installed google-adk
+ENV PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin
+RUN pipx install google-adk
 
 LABEL org.opencontainers.image.description="Declarative Student Workspace for wtgOS Cloud-Native Laboratory"
