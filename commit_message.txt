@@ -1,0 +1,5 @@
+🧪 Add tests for Dashboard component error handling and fetching
+
+🎯 **What:** The testing gap in the Dashboard component where the `fetch` error path wasn't tested has been addressed. The test suite has also been configured.
+📊 **Coverage:** The test coverage now includes the initial loading state, the happy path of successfully fetching the Github actions runs, and the error condition where `fetch` rejects.
+✨ **Result:** The test suite covers all lifecycle and error cases for the API data loading in the Dashboard component, ensuring refactoring confidence and catching missing loading or unhandled promise rejection edge cases.
