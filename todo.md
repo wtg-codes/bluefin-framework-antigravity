@@ -21,8 +21,8 @@
 - [x] Use `$HOME` instead of `~`: Update paths in `distrobox.ini`.
 - [x] Require YAML Document Starts: Enable `document-start` in `.yamllint.yml` and update files.
 - [x] Recursive To-do Updates: Ensure the to-do list is updated at the end of every session.
-- [ ] Implement Prettier/ESLint automation in CI.
-- [ ] Expand BATS suite to include Homebrew/Flatpak policy validation.
+- [x] Implement Prettier/ESLint automation in CI.
+- [x] Expand BATS suite to include Homebrew/Flatpak policy validation.
 
 ## Documentation Improvements (Completed)
 - [x] Restructure sidebar into logical categories (Introduction, Getting Started, Hardware, Usage, Technical Reference).

@@ -11,7 +11,7 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "Cloud-Native Laboratory",
+    title: "Easy to Use",
     Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
     description: (
       <>
@@ -21,7 +21,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: "Immutable Infrastructure",
+    title: "Focus on What Matters",
     Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
     description: (
       <>
@@ -31,7 +31,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: "AI Ready",
+    title: "Powered by React",
     Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
     description: (
       <>

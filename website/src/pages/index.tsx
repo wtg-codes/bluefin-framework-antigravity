@@ -22,7 +22,7 @@ function HomepageHeader() {
             className="button button--secondary button--lg"
             to="/docs/intro"
           >
-            Get Started 🚀
+            Docusaurus Tutorial - 5min ⏱️
           </Link>
         </div>
       </div>
@@ -35,7 +35,7 @@ export default function Home(): ReactNode {
   return (
     <Layout
       title={`Hello from ${siteConfig.title}`}
-      description="wtgOS: A cloud-native developer appliance for Framework 13, optimized for AI agent orchestration and immutable infrastructure."
+      description="Description will go into a meta tag in <head />"
     >
       <HomepageHeader />
       <main>
