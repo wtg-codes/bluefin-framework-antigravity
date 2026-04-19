@@ -124,11 +124,7 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="card__footer">
-              <a
-                className="button button--primary"
-                href={`https://github.com/${REPO}/pkgs/container/bluefin-framework-antigravity`}
-                target="_blank"
-              >
+              <a className="button button--primary" href={`https://github.com/${REPO}/pkgs/container/bluefin-framework-antigravity`} target="_blank" rel="noopener noreferrer">
                 View on GHCR
               </a>
             </div>
