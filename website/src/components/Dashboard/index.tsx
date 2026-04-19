@@ -22,7 +22,7 @@ export default function Dashboard() {
 
   return (
     <section className="margin-vert--lg">
-      <p>Live build status and image metadata for Bluefin Framework Antigravity.</p>
+      <p>Live build status and image metadata for wtgOS.</p>
 
       <h2>Latest Builds</h2>
       {loading ? (

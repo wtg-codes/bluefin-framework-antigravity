@@ -1,9 +1,9 @@
-# Antigravity OS 🐟🚀
+# wtgOS 🐟🚀
 
 [![bluebuild build badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml)
 [![GitHub Pages](https://img.shields.io/badge/Dashboard-GitHub%20Pages-blue)](https://wtg-codes.github.io/bluefin-framework-antigravity/)
 
-Welcome to the future, friends! **Antigravity OS** is a custom, opinionated, cloud-native developer appliance based on [Project Bluefin-DX](https://projectbluefin.io). We treat the desktop like cattle, not pets—featuring a read-only root filesystem, automated updates, and zero host-level pollution.
+Welcome to the future, friends! **wtgOS** is a custom, opinionated, cloud-native developer appliance based on [Project Bluefin-DX](https://projectbluefin.io) + Google dev tools. We treat the desktop like cattle, not pets—featuring a read-only root filesystem, automated updates, and zero host-level pollution.
 
 > [!TIP]
 > **View the [Live Documentation & Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/) for build status, latest images, and setup guides.**
@@ -22,15 +22,15 @@ Then reboot!
 Head over to the [Releases](../../releases) page and download the latest `.iso` file. Flash it to a USB drive using BalenaEtcher or Fedora Media Writer.
 
 ## 🚀 The Cloud-Native Laboratory
-Antigravity is built for **Cloud-Native Computing students** and **Multi-Agent Systems orchestration**.
+wtgOS is built for **Cloud-Native Computing students** and **Multi-Agent Systems orchestration**.
 
 - **Immutable Host:** The host OS exists only to run containers and hardware drivers. No host-level SDKs!
-- **Declarative Workspace:** All student development happens inside a high-performance Distrobox (`antigravity-cloud-native`) baked with `kubectl`, `helm`, `k9s`, and `kind`.
+- **Declarative Workspace:** All student development happens inside a high-performance Distrobox (`wtg-workspace`) baked with `kubectl`, `helm`, `k9s`, `kind`, and Google dev tools.
 - **AI Quarantine:** Isolated AI agent execution with direct hardware passthrough (ROCm) for GPU/NPU workloads.
 - **Zero-Trust CI/CD:** Every image is cryptographically signed and every ISO is verified before publication.
 
 ## 🛠️ Student Quick Start
-Once you have booted into Antigravity, bootstrap your workspace:
+Once you have booted into wtgOS, bootstrap your workspace:
 
 ```bash
 ujust setup-workspace

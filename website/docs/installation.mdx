@@ -1,10 +1,10 @@
 # Installation & Setup
 
-Bluefin Framework Antigravity is designed to be installed as a rebase from an existing Bluefin or Fedora-based atomic installation, or via a fresh install if you have the OCI image URL.
+Bluefin Framework wtgOS is designed to be installed as a rebase from an existing Bluefin or Fedora-based atomic installation, or via a fresh install if you have the OCI image URL.
 
-## Rebasing to Antigravity
+## Rebasing to wtgOS
 
-If you are already running Bluefin-DX or another Fedora Silverblue-based distribution, you can rebase your system to Antigravity with a single command:
+If you are already running Bluefin-DX or another Fedora Silverblue-based distribution, you can rebase your system to wtgOS with a single command:
 
 ```bash
 rpm-ostree rebase ostree-unverified-registry:ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
@@ -18,10 +18,10 @@ systemctl reboot
 
 ## Post-Installation Setup
 
-Once you have rebooted into Antigravity, you should initialize the AI quarantine environment:
+Once you have rebooted into wtgOS, you should initialize the AI quarantine environment:
 
 ```bash
-ujust setup-antigravity
+ujust setup-workspace
 ```
 
 This command will:

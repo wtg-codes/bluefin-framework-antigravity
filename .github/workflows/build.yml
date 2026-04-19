@@ -51,7 +51,7 @@ jobs:
           context: files/workspace
           file: files/workspace/Containerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository_owner }}/antigravity-workspace:latest
+          tags: ghcr.io/${{ github.repository_owner }}/wtg-workspace:latest
 
   bluebuild:
     name: Build Custom Image

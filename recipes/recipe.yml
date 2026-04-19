@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: bluefin-framework-antigravity
-description: My custom developer appliance based on Bluefin-DX for Framework 13.
+description: wtgOS - Bluefin-DX + Google dev tools for Framework 13.
 
 base-image: ghcr.io/ublue-os/bluefin-dx
 image-version: latest
@@ -45,5 +45,6 @@ modules:
           - com.google.Chrome
           - com.slack.Slack
           - com.discordapp.Discord
+          - de.haeckerfelix.Shortwave
 
   - type: signing

@@ -5,8 +5,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Bluefin Framework Antigravity',
-  tagline: 'Highly specialized, cryptographically signed, immutable OS for Framework 13',
+  title: 'wtgOS',
+  tagline: 'Bluefin-DX + Google dev tools for Framework 13',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -76,9 +76,9 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'Bluefin Antigravity',
+      title: 'wtgOS',
       logo: {
-        alt: 'Bluefin Logo',
+        alt: 'wtgOS Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -139,7 +139,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Bluefin Framework Antigravity Project. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} wtgOS Project. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

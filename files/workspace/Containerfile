@@ -23,7 +23,23 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --d
     && echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
     && apt-get update && apt-get install -y google-chrome-stable && rm -rf /var/lib/apt/lists/*
 
-# 3. Install CNCF Tooling
+# 3. Install Google Antigravity IDE and apply Sandbox Wrappers
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg | gpg --dearmor --yes -o /etc/apt/keyrings/antigravity-repo-key.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-ide/repo stable main" > /etc/apt/sources.list.d/antigravity-ide.list \
+    && apt-get update && apt-get install -y antigravity-ide && rm -rf /var/lib/apt/lists/*
+
+# Apply wrappers for Electron/Chrome stability in containers
+RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
+    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
+    && chmod +x /usr/bin/google-chrome-stable \
+    && if [ -f /usr/bin/antigravity-ide ]; then \
+       mv /usr/bin/antigravity-ide /usr/bin/antigravity-ide.orig; \
+       printf '#!/bin/bash\nexec /usr/bin/antigravity-ide.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/antigravity-ide; \
+       chmod +x /usr/bin/antigravity-ide; \
+    fi
+
+# 4. Install CNCF Tooling
 # Install kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
     && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
@@ -39,11 +55,12 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 RUN curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 \
     && chmod +x /usr/local/bin/kind
 
-# 4. Install AI Agent Dependencies
+# 5. Install AI Agent Dependencies
 # Gemini CLI
 RUN npm install -g @google/gemini-cli
 
 # Google ADK (Agent Development Kit)
-RUN pip install --break-system-packages google-adk
+# Using --ignore-installed to resolve PyYAML conflict observed in CI
+RUN pip install --break-system-packages --ignore-installed google-adk
 
-LABEL org.opencontainers.image.description="Declarative Student Workspace for Antigravity OS Cloud-Native Laboratory"
+LABEL org.opencontainers.image.description="Declarative Student Workspace for wtgOS Cloud-Native Laboratory"
