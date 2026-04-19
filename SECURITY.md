@@ -25,3 +25,18 @@ import Manifest from './shared/manifest.md';
 
 ## Immutability as a Security Feature
 The decision to use a strictly immutable host (`bluefin-dx`) with zero host-level CLI/GUI packages minimizes the attack surface. Any development tool or agent must exist within a container, ensuring that the core OS remains in a "known-good" state at all times. Our Test-Driven Infrastructure (TDI) mathematically proves these security constraints are met before any image is published.
+
+## Repository Administration Checklist (Mandatory)
+The following governance rules are enforced by the repository administrator to maintain the integrity of the Antigravity OS:
+
+1.  **Branch Protection (main):**
+    - [x] Require a pull request before merging.
+    - [x] Require approvals from CODEOWNERS.
+    - [x] Require status checks to pass before merging (Linting, SLSA Attestations).
+    - [x] Require linear history.
+    - [x] Require signed commits.
+2.  **Access Control:**
+    - [x] Least-privilege access for all collaborators.
+    - [x] Mandatory 2FA for all administrative accounts.
+3.  **Audit Logs:**
+    - [x] Weekly review of repository audit logs for suspicious activity.

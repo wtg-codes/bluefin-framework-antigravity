@@ -1,0 +1,49 @@
+FROM ghcr.io/ublue-os/ubuntu-toolbox:latest
+
+# 1. Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    jq \
+    ca-certificates \
+    gnupg \
+    x11-apps \
+    dbus-x11 \
+    libnss3 \
+    libgbm1 \
+    libasound2t64 \
+    python3-pip \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Install Google Chrome for agent-based browsing
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+    && echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
+    && apt-get update && apt-get install -y google-chrome-stable && rm -rf /var/lib/apt/lists/*
+
+# 3. Install CNCF Tooling
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+    && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
+
+# Install k9s
+RUN curl -sS https://webi.sh/k9s | sh && mv /root/.local/bin/k9s /usr/local/bin/k9s
+
+# Install helm
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+    && bash get_helm.sh && rm get_helm.sh
+
+# Install kind
+RUN curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 \
+    && chmod +x /usr/local/bin/kind
+
+# 4. Install AI Agent Dependencies
+# Gemini CLI
+RUN npm install -g @google/gemini-cli
+
+# Google ADK (Agent Development Kit)
+RUN pip install --break-system-packages google-adk
+
+LABEL org.opencontainers.image.description="Declarative Student Workspace for Antigravity OS Cloud-Native Laboratory"
