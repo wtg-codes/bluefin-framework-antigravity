@@ -1,50 +1,32 @@
 import React, { useEffect, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
+interface WorkflowRun {
+  id: number;
+  status: string;
+  conclusion: string | null;
+  html_url: string;
+  head_commit: {
+    message: string;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
 export default function Dashboard() {
   const { siteConfig } = useDocusaurusContext();
   const REPO = `${siteConfig.organizationName}/${siteConfig.projectName}`;
-  const [workflowRuns, setWorkflowRuns] = useState<any[]>([]);
+  const [workflowRuns, setWorkflowRuns] = useState<WorkflowRun[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const cacheKey = `github_workflow_runs_${REPO}`;
-    const cachedData =
-      typeof sessionStorage !== "undefined"
-        ? sessionStorage.getItem(cacheKey)
-        : null;
-
-    if (cachedData) {
-      try {
-        const { data, timestamp } = JSON.parse(cachedData);
-        // Cache for 5 minutes (300000 ms)
-        if (Date.now() - timestamp < 300000) {
-          setWorkflowRuns(data);
-          setLoading(false);
-          return;
-        }
-      } catch (e) {
-        console.error("Failed to parse cached workflow runs", e);
-      }
-    }
-
     fetch(
       `https://api.github.com/repos/${REPO}/actions/workflows/build.yml/runs?per_page=5`,
     )
       .then((res) => res.json())
       .then((data) => {
-        const runs = data.workflow_runs || [];
-        setWorkflowRuns(runs);
+        setWorkflowRuns(data.workflow_runs || []);
         setLoading(false);
-        if (typeof sessionStorage !== "undefined") {
-          sessionStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-              data: runs,
-              timestamp: Date.now(),
-            }),
-          );
-        }
       })
       .catch((err) => {
         console.error("Failed to fetch workflow runs", err);
@@ -142,11 +124,7 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="card__footer">
-              <a
-                className="button button--primary"
-                href={`https://github.com/${REPO}/pkgs/container/bluefin-framework-antigravity`}
-                target="_blank"
-              >
+              <a className="button button--primary" href={`https://github.com/${REPO}/pkgs/container/bluefin-framework-antigravity`} target="_blank" rel="noopener noreferrer">
                 View on GHCR
               </a>
             </div>
