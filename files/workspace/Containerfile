@@ -27,16 +27,16 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --d
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg | gpg --dearmor --yes -o /etc/apt/keyrings/antigravity-repo-key.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" > /etc/apt/sources.list.d/antigravity-ide.list \
-    && apt-get update && apt-get install -y antigravity-ide && rm -rf /var/lib/apt/lists/*
+    && apt-get update && apt-get install -y antigravity && rm -rf /var/lib/apt/lists/*
 
 # Apply wrappers for Electron/Chrome stability in containers
 RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
     && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
     && chmod +x /usr/bin/google-chrome-stable \
-    && if [ -f /usr/bin/antigravity-ide ]; then \
-       mv /usr/bin/antigravity-ide /usr/bin/antigravity-ide.orig; \
-       printf '#!/bin/bash\nexec /usr/bin/antigravity-ide.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/antigravity-ide; \
-       chmod +x /usr/bin/antigravity-ide; \
+    && if [ -f /usr/bin/antigravity ]; then \
+       mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
+       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
+       && chmod +x /usr/bin/antigravity; \
     fi
 
 # 4. Install CNCF Tooling

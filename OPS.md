@@ -32,11 +32,11 @@ Since the OS is atomic, rolling back to a previous "known-good" version is strai
 rpm-ostree rollback
 ```
 
-### Resetting Antigravity Workspace
+### Resetting wtgOS Workspace
 If the AI quarantine environment becomes corrupted, you can delete the workspace and recreate it:
 ```bash
-rm -rf ~/.local/share/antigravity-workspace
-ujust setup-antigravity
+rm -rf ~/.local/share/wtg-workspace
+ujust setup-workspace
 ```
 
 ## Maintenance

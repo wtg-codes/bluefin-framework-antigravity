@@ -4,6 +4,9 @@ setup-workspace:
     @mkdir -p ~/.local/share/wtg-workspace
     @distrobox assemble create --replace --file /usr/share/bluefin-framework/wtgOS/distrobox.ini
 
+# setup-antigravity: alias for setup-workspace for legacy compatibility
+setup-antigravity: setup-workspace
+
 # start-cluster: spins up a local kind cluster using podman
 start-cluster:
     @echo "Starting local Kubernetes cluster (kind) via Podman..."
