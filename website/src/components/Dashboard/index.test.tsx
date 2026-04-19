@@ -1,18 +1,36 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import Dashboard from './index';
+import '@testing-library/jest-dom';
 
-// Mock fetch
-global.fetch = jest.fn();
+// Mock the useDocusaurusContext hook
+jest.mock('@docusaurus/useDocusaurusContext', () => ({
+  __esModule: true,
+  default: () => ({
+    siteConfig: {
+      organizationName: 'wtg-codes',
+      projectName: 'bluefin-framework-antigravity',
+    },
+  }),
+}));
 
 describe('Dashboard Component', () => {
+  let originalFetch: typeof global.fetch;
+  let consoleErrorMock: jest.SpyInstance;
+
   beforeEach(() => {
-    jest.clearAllMocks();
+    originalFetch = global.fetch;
+    consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    consoleErrorMock.mockRestore();
   });
 
   it('renders loading state initially', () => {
-    // Return a promise that doesn't resolve immediately to test loading state
-    (global.fetch as jest.Mock).mockImplementationOnce(() => new Promise(() => {}));
+    // Mock fetch to return a promise that doesn't resolve immediately
+    global.fetch = jest.fn(() => new Promise(() => {}));
 
     render(<Dashboard />);
 
@@ -20,8 +38,28 @@ describe('Dashboard Component', () => {
     expect(screen.getByText('Live build status and image metadata for wtgOS.')).toBeInTheDocument();
   });
 
-  it('renders workflow runs correctly after fetch', async () => {
-    const mockData = {
+  it('handles API fetch error and logs it, then stops loading', async () => {
+    // Mock fetch to reject with an error
+    const testError = new Error('Network error');
+    global.fetch = jest.fn(() => Promise.reject(testError));
+
+    render(<Dashboard />);
+
+    // Check that loading text disappears
+    await waitFor(() => {
+      expect(screen.queryByText('Loading build status...')).not.toBeInTheDocument();
+    });
+
+    // Check that console.error was called with the correct arguments
+    expect(consoleErrorMock).toHaveBeenCalledWith('Failed to fetch workflow runs', testError);
+
+    // Check that the table renders (empty since workflowRuns is empty)
+    expect(screen.getByText('Status')).toBeInTheDocument();
+    expect(screen.getByText('Commit')).toBeInTheDocument();
+  });
+
+  it('handles successful API fetch and displays data', async () => {
+    const mockRuns = {
       workflow_runs: [
         {
           id: 1,
@@ -53,13 +91,14 @@ describe('Dashboard Component', () => {
       ]
     };
 
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(mockData)
-    });
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockRuns)
+      })
+    ) as jest.Mock;
 
     render(<Dashboard />);
 
-    // Wait for the loading state to disappear
     await waitFor(() => {
       expect(screen.queryByText('Loading build status...')).not.toBeInTheDocument();
     });
@@ -80,9 +119,11 @@ describe('Dashboard Component', () => {
   });
 
   it('handles fetch returning no workflow_runs gracefully', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce({})
-    });
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({})
+      })
+    ) as jest.Mock;
 
     render(<Dashboard />);
 
@@ -91,20 +132,5 @@ describe('Dashboard Component', () => {
     });
 
     expect(screen.queryByText('success')).not.toBeInTheDocument();
-  });
-
-  it('handles fetch errors gracefully', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('API failure'));
-
-    render(<Dashboard />);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading build status...')).not.toBeInTheDocument();
-    });
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to fetch workflow runs', expect.any(Error));
-
-    consoleErrorSpy.mockRestore();
   });
 });

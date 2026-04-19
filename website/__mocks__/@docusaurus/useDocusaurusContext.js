@@ -1,8 +1,8 @@
 export default function useDocusaurusContext() {
   return {
     siteConfig: {
-      organizationName: 'wtg-codes',
-      projectName: 'bluefin-framework-antigravity',
+      organizationName: 'ublue-os',
+      projectName: 'bluefin',
     },
   };
 }
