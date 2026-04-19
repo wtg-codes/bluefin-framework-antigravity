@@ -19,6 +19,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   lint:
     name: Lint YAML
@@ -122,11 +125,11 @@ jobs:
           image_repo: ghcr.io/${{ github.repository_owner }}
           image_tag: latest
           version: 40
-          iso_name: antigravity-os-latest.iso
+          iso_name: wtgOS-latest.iso
 
       - name: Upload ISO as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: antigravity-os-installer
+          name: wtgOS-installer
           path: ${{ steps.build.outputs.iso_path }}
           retention-days: 7

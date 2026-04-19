@@ -2,7 +2,7 @@
 setup-workspace:
     @echo "Setting up wtgOS Workspace..."
     @mkdir -p ~/.local/share/wtg-workspace
-    @distrobox assemble create --replace --file /usr/share/bluefin-framework/antigravity/distrobox.ini
+    @distrobox assemble create --replace --file /usr/share/bluefin-framework/wtgOS/distrobox.ini
 
 # start-cluster: spins up a local kind cluster using podman
 start-cluster:

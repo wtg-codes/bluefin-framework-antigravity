@@ -4,20 +4,20 @@
 # This suite verifies the integrity of the wtgOS image and its student workspace configuration.
 
 @test "Distrobox configuration file exists at system path" {
-    [ -f "files/usr/share/bluefin-framework/antigravity/distrobox.ini" ]
+    [ -f "files/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]
 }
 
 @test "Distrobox configuration uses the declarative wtg-workspace image" {
-    grep -q "image=ghcr.io/\${GITHUB_REPOSITORY_OWNER}/wtg-workspace:latest" "files/usr/share/bluefin-framework/antigravity/distrobox.ini"
+    grep -q "image=ghcr.io/wtg-codes/wtg-workspace:latest" "files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
 }
 
 @test "Distrobox configuration contains required hardware passthrough" {
-    grep -q -- "--device /dev/kfd" "files/usr/share/bluefin-framework/antigravity/distrobox.ini"
-    grep -q -- "--device /dev/dri" "files/usr/share/bluefin-framework/antigravity/distrobox.ini"
+    grep -q -- "--device /dev/kfd" "files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q -- "--device /dev/dri" "files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
 }
 
 @test "Distrobox configuration enables Podman socket mounting" {
-    grep -q "/run/user/1000/podman/podman.sock" "files/usr/share/bluefin-framework/antigravity/distrobox.ini"
+    grep -q "/run/user/1000/podman/podman.sock" "files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
 }
 
 @test "Recipe contains mandatory Framework hardware kargs" {

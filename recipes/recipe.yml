@@ -30,7 +30,7 @@ modules:
 
   - type: justfiles
     include:
-      - antigravity.just
+      - wtgOS.just
 
   - type: default-flatpaks
     notify: true

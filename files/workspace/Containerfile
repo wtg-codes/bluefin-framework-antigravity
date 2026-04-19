@@ -26,7 +26,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --d
 # 3. Install Google Antigravity IDE and apply Sandbox Wrappers
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg | gpg --dearmor --yes -o /etc/apt/keyrings/antigravity-repo-key.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-ide/repo stable main" > /etc/apt/sources.list.d/antigravity-ide.list \
+    && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" > /etc/apt/sources.list.d/antigravity-ide.list \
     && apt-get update && apt-get install -y antigravity-ide && rm -rf /var/lib/apt/lists/*
 
 # Apply wrappers for Electron/Chrome stability in containers
