@@ -32,11 +32,11 @@ RUN mkdir -p /etc/apt/keyrings \
 
 # Apply wrappers for Electron/Chrome stability in containers
 RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
-    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
+    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
     && chmod +x /usr/bin/google-chrome-stable \
     && if [ -f /usr/bin/antigravity ]; then \
        mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
-       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
+       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
        && chmod +x /usr/bin/antigravity; \
     fi
 
