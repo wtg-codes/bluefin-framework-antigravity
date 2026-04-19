@@ -19,6 +19,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   lint:
     name: Lint YAML
@@ -45,13 +48,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
       - name: Build and Push Workspace Image
         uses: docker/build-push-action@v5
         with:
           context: files/workspace
           file: files/workspace/Containerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository_owner }}/antigravity-workspace:latest
+          tags: ghcr.io/${{ github.repository_owner }}/wtg-workspace:latest
 
   bluebuild:
     name: Build Custom Image
@@ -70,7 +80,7 @@ jobs:
         id: build
         uses: blue-build/github-action@c98a71685dcc2fc79d290a09e4a6cb079b05801e
         with:
-          recipe: recipe.yml
+          recipe: recipes/recipe.yml
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
@@ -122,11 +132,11 @@ jobs:
           image_repo: ghcr.io/${{ github.repository_owner }}
           image_tag: latest
           version: 40
-          iso_name: antigravity-os-latest.iso
+          iso_name: wtgOS-latest.iso
 
       - name: Upload ISO as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: antigravity-os-installer
+          name: wtgOS-installer
           path: ${{ steps.build.outputs.iso_path }}
           retention-days: 7

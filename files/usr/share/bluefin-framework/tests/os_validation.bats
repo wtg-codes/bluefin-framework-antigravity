@@ -4,16 +4,16 @@
 # not during the BlueBuild CI container build.
 
 @test "Distrobox configuration file exists" {
-    [ -f "/usr/share/bluefin-framework/antigravity/distrobox.ini" ]
+    [ -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]
 }
 
 @test "Distrobox configuration contains required hardware passthrough" {
-    grep -q -- "--device /dev/kfd" "/usr/share/bluefin-framework/antigravity/distrobox.ini"
-    grep -q -- "--device /dev/dri" "/usr/share/bluefin-framework/antigravity/distrobox.ini"
+    grep -q -- "--device /dev/kfd" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q -- "--device /dev/dri" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
 }
 
-@test "Distrobox configuration includes Chrome installation hooks" {
-    grep -q "google-chrome-stable" "/usr/share/bluefin-framework/antigravity/distrobox.ini"
+@test "Distrobox configuration uses the declarative wtg-workspace image" {
+    grep -q "image=ghcr.io/wtg-codes/wtg-workspace:latest" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
 }
 
 @test "fwupd service is active (Framework hardware updates)" {

@@ -12,7 +12,7 @@
 10. [x] Standardize YAML document starts in all configuration and workflow files.
 11. [x] Implement SLSA Build Provenance and Artifact Attestations.
 12. [x] Complete Level 10 Performance Review.
-13. [x] Implement Antigravity ISO Forge (Phase 1-4)
+13. [x] Implement wtgOS ISO Forge (Phase 1-4)
 
 ## Additional CI/CD & Security Improvements
 - [x] Expand Dependabot Coverage: Add npm ecosystem for `website/`.
@@ -28,6 +28,6 @@
 - [x] Restructure sidebar into logical categories (Introduction, Getting Started, Hardware, Usage, Technical Reference).
 - [x] Create comprehensive 'Installation & Setup' guide.
 - [x] Create detailed 'Hardware Optimization' page for Framework 13 Ryzen AI 300.
-- [x] Create 'Quarantined AI (Antigravity)' guide explaining Distrobox and ROCm.
+- [x] Create 'wtg-workspace' guide explaining Distrobox and ROCm.
 - [x] Create 'Software Management' policy guide (Flatpak/Homebrew).
 - [x] Ensure SSOT via MDX imports for architecture, security, and ops.

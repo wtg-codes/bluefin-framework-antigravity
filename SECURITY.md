@@ -9,7 +9,7 @@ import Manifest from './shared/manifest.md';
 
 ### T1: Host System Compromise via AI Hallucination
 *   **Threat:** An AI agent executing code might hallucinate destructive `sudo` commands or attempt to modify system-level configurations.
-*   **Mitigation:** The AI agent operates within a **Distrobox container** with a non-privileged user and a mapped workspace (`~/.local/share/antigravity-workspace`). The **atomic root filesystem** is read-only, preventing any accidental or malicious modification of the host OS even if the agent attempts to use `sudo`.
+*   **Mitigation:** The AI agent operates within a **Distrobox container** with a non-privileged user and a mapped workspace (`~/.local/share/wtg-workspace`). The **atomic root filesystem** is read-only, preventing any accidental or malicious modification of the host OS even if the agent attempts to use `sudo`.
 
 ### T2: Supply Chain Attack
 *   **Threat:** Malicious code injected into the OS image during the build process.
@@ -27,7 +27,7 @@ import Manifest from './shared/manifest.md';
 The decision to use a strictly immutable host (`bluefin-dx`) with zero host-level CLI/GUI packages minimizes the attack surface. Any development tool or agent must exist within a container, ensuring that the core OS remains in a "known-good" state at all times. Our Test-Driven Infrastructure (TDI) mathematically proves these security constraints are met before any image is published.
 
 ## Repository Administration Checklist (Mandatory)
-The following governance rules are enforced by the repository administrator to maintain the integrity of the Antigravity OS:
+The following governance rules are enforced by the repository administrator to maintain the integrity of wtgOS:
 
 1.  **Branch Protection (main):**
     - [x] Require a pull request before merging.

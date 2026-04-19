@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: bluefin-framework-antigravity
-description: Highly specialized, cryptographically signed, immutable OS for Framework 13 with Quarantined AI.
+name: wtgOS
+description: wtgOS - Bluefin-DX + Google dev tools for Framework 13.
 
 base-image: ghcr.io/ublue-os/bluefin-dx
 image-version: latest
@@ -16,7 +16,7 @@ modules:
 
   - type: rpm-ostree
     install:
-      - bats  # Kept so BATS is available on the live host for post-install validation
+      - bats  # Essential for post-install OS validation
 
   - type: systemd
     system:
@@ -30,17 +30,21 @@ modules:
 
   - type: justfiles
     include:
-      - antigravity.just
+      - wtgOS.just
 
   - type: default-flatpaks
+    notify: true
     configurations:
-      - notify: true
-        scope: system
+      - scope: system
+        repo-url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        repo-name: flathub
+        repo-title: "Flathub (system-wide)"
         install:
           - org.gnome.Loupe
           - com.visualstudio.code
           - com.google.Chrome
           - com.slack.Slack
           - com.discordapp.Discord
+          - de.haeckerfelix.Shortwave
 
   - type: signing
