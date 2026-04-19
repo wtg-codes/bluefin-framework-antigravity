@@ -1,39 +1,49 @@
-# bluefin-framework-antigravity
+# Antigravity OS 🐟🚀
 
 [![bluebuild build badge](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml/badge.svg)](https://github.com/wtg-codes/bluefin-framework-antigravity/actions/workflows/build.yml)
 [![GitHub Pages](https://img.shields.io/badge/Dashboard-GitHub%20Pages-blue)](https://wtg-codes.github.io/bluefin-framework-antigravity/)
 
-**bluefin-framework-antigravity** is a highly specialized, cryptographically signed, immutable operating system based on Bluefin-DX, optimized for the Framework Laptop 13 and agentic development workflows.
+Welcome to the future, friends! **Antigravity OS** is a custom, opinionated, cloud-native developer appliance based on [Project Bluefin-DX](https://projectbluefin.io). We treat the desktop like cattle, not pets—featuring a read-only root filesystem, automated updates, and zero host-level pollution.
 
 > [!TIP]
-> **View the [Live Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/dashboard) for build status, latest images, and detailed installation guides.**
+> **View the [Live Documentation & Dashboard](https://wtg-codes.github.io/bluefin-framework-antigravity/) for build status, latest images, and setup guides.**
 
-## Documentation
-- 🛠️ **[Architecture (ADRs)](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/architecture)** - Architectural Decision Records and system design.
-- 🛡️ **[Security Model](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/security)** - Threat model and mitigation strategies.
-- 📖 **[Operations Runbook](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/ops)** - Maintenance, updates, and disaster recovery.
-- 💻 **[Hardware Manifest](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/intro#target-hardware-manifest-zero-compromises)** - Detailed hardware specifications.
+## 📥 Installation
 
-## Target Hardware Manifest (Zero Compromises)
-import Manifest from './shared/manifest.md';
+### Option 1: The "Bluefin Way" (Rebase)
+If you are already running a Fedora Atomic / uBlue installation, just open your terminal and run:
 
-<Manifest />
+```bash
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
+```
+Then reboot!
 
-## Features
-- **Strict Immutability:** Zero host-level GUI/CLI tools (Flathub/Homebrew only).
-- **AI Quarantine:** Antigravity agent operates in a declarative Distrobox container.
-- **Hardware Passthrough:** ROCm access for GPU/NPU-accelerated AI workloads.
-- **TDI Validated:** CI/CD pipeline enforces hardware and configuration constraints via BATS before every push.
+### Option 2: Clean Install (Bare Metal)
+Head over to the [Releases](../../releases) page and download the latest `.iso` file. Flash it to a USB drive using BalenaEtcher or Fedora Media Writer.
 
-## Quick Start
+## 🚀 The Cloud-Native Laboratory
+Antigravity is built for **Cloud-Native Computing students** and **Multi-Agent Systems orchestration**.
 
-1. **Rebase to the image**:
-   ```bash
-   rpm-ostree rebase ostree-unverified-registry:ghcr.io/wtg-codes/bluefin-framework-antigravity:latest
-   ```
-2. **Reboot and Initialize**:
-   ```bash
-   ujust setup-antigravity
-   ```
+- **Immutable Host:** The host OS exists only to run containers and hardware drivers. No host-level SDKs!
+- **Declarative Workspace:** All student development happens inside a high-performance Distrobox (`antigravity-cloud-native`) baked with `kubectl`, `helm`, `k9s`, and `kind`.
+- **AI Quarantine:** Isolated AI agent execution with direct hardware passthrough (ROCm) for GPU/NPU workloads.
+- **Zero-Trust CI/CD:** Every image is cryptographically signed and every ISO is verified before publication.
 
-Full instructions available on the [Documentation Site](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/intro).
+## 🛠️ Student Quick Start
+Once you have booted into Antigravity, bootstrap your workspace:
+
+```bash
+ujust setup-workspace
+ujust start-cluster
+```
+
+## 📖 Technical Reference
+- 🛠️ **[Architecture (ADRs)](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/architecture)**
+- 🛡️ **[Security Model](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/security)**
+- 📖 **[Operations Runbook](https://wtg-codes.github.io/bluefin-framework-antigravity/docs/ops)**
+
+## 🤝 Upstream First
+This project stands on the shoulders of giants. If you find a bug in the desktop environment, please report it to [Fedora](https://fedoraproject.org/) or [GNOME](https://gnome.org/).
+
+---
+Built with ❤️ using [BlueBuild](https://blue-build.org).
