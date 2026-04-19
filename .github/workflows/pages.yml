@@ -25,16 +25,44 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  build:
+  lint-and-format:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: website
+
+      - name: Run ESLint
+        run: npm run lint
+        working-directory: website
+
+      - name: Run Prettier check
+        run: npm run format:check
+        working-directory: website
+
+  build:
+    needs: lint-and-format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.3.0
         with:
           node-version: 22
           cache: 'npm'
