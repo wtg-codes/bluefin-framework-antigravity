@@ -11,7 +11,14 @@ export default function Dashboard() {
     fetch(`https://api.github.com/repos/${REPO}/actions/workflows/build.yml/runs?per_page=5`)
       .then(res => res.json())
       .then(data => {
-        setWorkflowRuns(data.workflow_runs || []);
+        const runs = (data.workflow_runs || []).map((run: any) => ({
+          ...run,
+          formattedStarted: new Date(run.created_at).toLocaleString(),
+          duration: run.conclusion
+            ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
+            : '--'
+        }));
+        setWorkflowRuns(runs);
         setLoading(false)
       })
       .catch(err => {
@@ -57,10 +64,8 @@ export default function Dashboard() {
                       {run.head_commit.message.split('\n')[0].substring(0, 50)}
                     </a>
                   </td>
-                  <td style={{ padding: '10px' }}>{new Date(run.created_at).toLocaleString()}</td>
-                  <td style={{ padding: '10px' }}>
-                    {run.conclusion ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m` : '--'}
-                  </td>
+                  <td style={{ padding: '10px' }}>{run.formattedStarted}</td>
+                  <td style={{ padding: '10px' }}>{run.duration}</td>
                 </tr>
               ))}
             </tbody>
