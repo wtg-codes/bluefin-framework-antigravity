@@ -35,3 +35,23 @@ The CI/CD pipeline must mathematically prove the OS image meets our hardware con
 - **Security Visibility:** Explicitly documented SLSA Level 3 provenance and artifact attestations in `SECURITY.md` to match the technical implementation in the build workflow.
 - **Performance Documentation:** Linked hardware-specific kernel arguments (`amd_pstate`) and build-system optimizations (`@docusaurus/faster`) in `OPS.md` to provide a clear performance profile of the OS.
 - **Recursive To-do Updates:** Maintaining a consistent state of the `todo.md` file is critical for continuity across sessions.
+
+## Jules Agent Configuration
+
+This file provides context and instructions for the Jules agent interacting with the bluefin-framework-antigravity (wtgOS) repository.
+
+### Environment Initialization
+
+To interact with this repository properly, the VM environment must be bootstrapped with specific OS tooling (like bats and just), Node.js dependencies for the documentation, and Google Cloud AI SDKs.
+
+Setup Script Path: `.jules/setup.sh`
+
+If the environment is fresh or you are encountering missing command errors, ensure that `.jules/setup.sh` has been executed.
+
+### Agent Guidelines
+
+Add any specific instructions for how you want Jules to behave here.
+
+Example: "Always use just commands to build the project instead of raw scripts."
+
+Example: "When modifying the website, verify changes by running the docusaurus build."

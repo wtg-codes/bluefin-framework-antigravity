@@ -3,21 +3,29 @@
 # wtgOS Validation Suite
 # This suite verifies the integrity of the wtgOS image and its student workspace configuration.
 
-@test "Distrobox configuration file exists at system path" {
-    [ -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]
+@test "Distrobox configuration file exists" {
+    # Check both system path (for CI/Live) and repository path (for local dev)
+    [ -f "/usr/share/bluefin-framework/wtgOS/distrobox.ini" ] || [ -f "files/usr/share/bluefin-framework/wtgOS/distrobox.ini" ]
 }
 
 @test "Distrobox configuration uses the declarative wtg-workspace image" {
-    grep -q "image=ghcr.io/wtg-codes/wtg-workspace:latest" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q "image=ghcr.io/wtg-codes/wtg-workspace:latest" "$FILE"
 }
 
 @test "Distrobox configuration contains required hardware passthrough" {
-    grep -q -- "--device /dev/kfd" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
-    grep -q -- "--device /dev/dri" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q -- "--device /dev/kfd" "$FILE"
+    grep -q -- "--device /dev/dri" "$FILE"
 }
 
-@test "Distrobox configuration enables Podman socket mounting" {
-    grep -q "/run/user/1000/podman/podman.sock" "/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+@test "Distrobox configuration enables native Podman with init system" {
+    FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
+    grep -q "init=true" "$FILE"
+    ! grep -q "/run/user/1000/podman/podman.sock" "$FILE"
 }
 
 @test "Kernel arguments are actively applied (simulated)" {
@@ -28,4 +36,12 @@
 @test "Workspace Containerfile logic check" {
     # Check if we correctly modified the source before building
     [ -f "files/workspace/Containerfile" ] && grep -q "antigravity" "files/workspace/Containerfile"
+}
+
+@test "GitHub Actions workflows resolve Node 20 deprecation" {
+    # Ensure no core actions are pinned to versions lower than Node 24 baseline
+    # We check for @v followed by a single digit 0-4 for actions/checkout
+    ! grep -r "actions/checkout@v[0-4]" .github/workflows/
+    # Ensure FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 is set
+    grep -r "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true" .github/workflows/
 }

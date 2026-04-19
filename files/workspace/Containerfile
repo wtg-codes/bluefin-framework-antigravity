@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libasound2t64 \
     python3-pip \
+    pipx \
     nodejs \
     npm \
     && rm -rf /var/lib/apt/lists/*
@@ -31,11 +32,11 @@ RUN mkdir -p /etc/apt/keyrings \
 
 # Apply wrappers for Electron/Chrome stability in containers
 RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
-    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
+    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
     && chmod +x /usr/bin/google-chrome-stable \
     && if [ -f /usr/bin/antigravity ]; then \
        mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
-       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
+       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
        && chmod +x /usr/bin/antigravity; \
     fi
 
@@ -61,6 +62,7 @@ RUN npm install -g @google/gemini-cli
 
 # Google ADK (Agent Development Kit)
 # Using --ignore-installed to resolve PyYAML conflict observed in CI
-RUN pip install --break-system-packages --ignore-installed google-adk
+ENV PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin
+RUN pipx install google-adk
 
 LABEL org.opencontainers.image.description="Declarative Student Workspace for wtgOS Cloud-Native Laboratory"
