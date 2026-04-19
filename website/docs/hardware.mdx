@@ -4,7 +4,7 @@ This Distro Spin is specifically tuned for the **Framework Laptop 13** equipped 
 
 ## Target Hardware Manifest
 
-import Manifest from '../../shared/manifest.md';
+import Manifest from "../../shared/manifest.md";
 
 <Manifest />
 
@@ -18,11 +18,13 @@ The following kernel arguments are applied by default to ensure optimal performa
 ## Display & Scaling
 
 The Framework 13's 2.8K display (2880x1920) provides a high pixel density.
+
 - **Default Scaling:** We default to **150% fractional scaling** on Wayland to provide a balanced workspace.
 - **Optimization:** We use GSettings overrides to ensure consistent text scaling across the GNOME environment.
 
 ## Memory Management
 
 With 96GB of DDR5-5600 RAM, this build is optimized for large-scale local LLM inference.
+
 - **UMA Maximization:** It is recommended to maximize the UMA buffer in the BIOS to allow the integrated RDNA 3.5 graphics to leverage the full memory pool.
 - **ROCm Integration:** The OS is configured to pass this memory pool directly into the Quarantined AI environment.

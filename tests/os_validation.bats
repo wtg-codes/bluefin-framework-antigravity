@@ -44,3 +44,23 @@
     # Ensure FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 is set
     grep -r "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true" .github/workflows/
 }
+
+@test "Recipe contains default-flatpaks module configuration" {
+    RECIPE="/usr/etc/bluebuild/recipes/recipe.yml"
+    [ ! -f "$RECIPE" ] && RECIPE="recipes/recipe.yml"
+    grep -q "type: default-flatpaks" "$RECIPE"
+}
+
+@test "Recipe flatpaks configuration contains expected communication apps" {
+    RECIPE="/usr/etc/bluebuild/recipes/recipe.yml"
+    [ ! -f "$RECIPE" ] && RECIPE="recipes/recipe.yml"
+    grep -q "com.slack.Slack" "$RECIPE"
+    grep -q "com.discordapp.Discord" "$RECIPE"
+}
+
+@test "Recipe flatpaks configuration includes developer tools" {
+    RECIPE="/usr/etc/bluebuild/recipes/recipe.yml"
+    [ ! -f "$RECIPE" ] && RECIPE="recipes/recipe.yml"
+    grep -q "com.visualstudio.code" "$RECIPE"
+    grep -q "com.google.Chrome" "$RECIPE"
+}
