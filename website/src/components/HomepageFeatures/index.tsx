@@ -15,8 +15,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Built for Computing students and Multi-Agent Systems orchestration with
+        automated updates and zero host-level pollution.
       </>
     ),
   },
@@ -25,8 +25,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Based on Bluefin-DX with a read-only root filesystem, ensuring stability
+        and security through atomic updates.
       </>
     ),
   },
@@ -35,8 +35,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Isolated AI agent execution with direct hardware passthrough (ROCm) for
+        GPU/NPU workloads on Framework 13.
       </>
     ),
   },

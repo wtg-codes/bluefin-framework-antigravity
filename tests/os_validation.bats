@@ -21,10 +21,11 @@
     grep -q -- "--device /dev/dri" "$FILE"
 }
 
-@test "Distrobox configuration enables Podman socket mounting" {
+@test "Distrobox configuration enables native Podman with init system" {
     FILE="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
     [ ! -f "$FILE" ] && FILE="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
-    grep -q "/run/user/1000/podman/podman.sock" "$FILE"
+    grep -q "init=true" "$FILE"
+    ! grep -q "/run/user/1000/podman/podman.sock" "$FILE"
 }
 
 @test "Kernel arguments are actively applied (simulated)" {
