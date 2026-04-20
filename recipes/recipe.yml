@@ -14,11 +14,8 @@ modules:
       - source: usr
         destination: /usr
 
-  - type: rpm-ostree
-    install:
-      - bats  # Essential for post-install OS validation
-      - nodejs
-      - pipx
+  - from-file: core-rpms.yml
+  - from-file: terminal-tools.yml
 
   - type: systemd
     system:
@@ -34,22 +31,6 @@ modules:
     include:
       - wtgOS.just
 
-  - type: default-flatpaks
-    configurations:
-      - scope: system
-        repo-url: https://dl.flathub.org/repo/flathub.flatpakrepo
-        repo-name: flathub
-        repo-title: "Flathub (system-wide)"
-        install:
-          - org.gnome.Loupe
-          - com.visualstudio.code
-          - com.google.Chrome
-          - com.slack.Slack
-          - com.discordapp.Discord
-          - de.haeckerfelix.Shortwave
+  - from-file: flatpaks.yml
 
   - type: signing
-
-  - type: script
-    scripts:
-      - install-tools.sh
