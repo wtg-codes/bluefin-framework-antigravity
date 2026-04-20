@@ -2,3 +2,4 @@
 - [x] Implement a checksum verification using `sha256sum` to validate the downloaded `get_helm.sh` script before execution.
 - [x] Verify the implementation by running `bats tests/os_validation.bats` and verifying `Containerfile` changes.
 - [x] Commit the changes using PR security standards.
+- [x] Add Universal Blue / Project Bluefin philosophies to AGENTS.md
