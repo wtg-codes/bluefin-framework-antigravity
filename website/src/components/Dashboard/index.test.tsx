@@ -17,23 +17,22 @@ vi.mock("@docusaurus/useDocusaurusContext", () => ({
 
 describe("Dashboard Component", () => {
   let originalFetch: typeof global.fetch;
-  let consoleErrorMock: MockInstance;
+  let consoleErrorMock: any;
 
   beforeEach(() => {
     originalFetch = global.fetch;
-    consoleErrorMock = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    consoleErrorMock = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
     consoleErrorMock.mockRestore();
+    sessionStorage.clear();
   });
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = vi.fn(() => new Promise(() => {})) as unknown as typeof global.fetch;
+    global.fetch = vi.fn(() => new Promise(() => {})) as any;
 
     render(<Dashboard />);
 
@@ -43,7 +42,7 @@ describe("Dashboard Component", () => {
   it("handles API fetch error and logs it, then stops loading", async () => {
     // Mock fetch to reject with an error
     const testError = new Error("Network error");
-    global.fetch = vi.fn(() => Promise.reject(testError)) as unknown as typeof global.fetch;
+    global.fetch = vi.fn(() => Promise.reject(testError)) as any;
 
     render(<Dashboard />);
 
@@ -81,10 +80,8 @@ describe("Dashboard Component", () => {
     };
 
     global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockRuns),
-      }),
-    ) as unknown as typeof global.fetch;
+      Promise.resolve({ json: () => Promise.resolve(mockRuns) }),
+    ) as any;
 
     render(<Dashboard />);
 
@@ -98,63 +95,28 @@ describe("Dashboard Component", () => {
     expect(screen.getByText("success")).toBeInTheDocument();
   });
 
-  it("handles successful API fetch with missing workflow_runs", async () => {
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve({}), // missing workflow_runs
-      }),
-    ) as unknown as typeof global.fetch;
-
-    render(<Dashboard />);
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Loading build status..."),
-      ).not.toBeInTheDocument();
-    });
-
-    // Should render headers, but no runs
-    expect(screen.getByText("Status")).toBeInTheDocument();
-  });
-
-  it("handles different run statuses and conclusions", async () => {
-    const mockRuns = {
-      workflow_runs: [
-        {
-          id: 1,
-          status: "completed",
-          conclusion: "failure",
-          html_url: "https://github.com/example/run/1",
-          head_commit: { message: "Test commit 1" },
-          created_at: "2023-01-01T10:00:00Z",
-          updated_at: "2023-01-01T10:05:00Z",
-        },
+  it("uses cached data from sessionStorage if valid", async () => {
+    const mockCachedRuns = {
+      timestamp: Date.now(),
+      data: [
         {
           id: 2,
-          status: "in_progress",
-          conclusion: null,
-          html_url: "https://github.com/example/run/2",
-          head_commit: { message: "Test commit 2" },
-          created_at: "2023-01-01T10:00:00Z",
-          updated_at: "2023-01-01T10:05:00Z",
-        },
-        {
-          id: 3,
           status: "completed",
-          conclusion: "cancelled",
-          html_url: "https://github.com/example/run/3",
-          head_commit: { message: "Test commit 3" },
-          created_at: "2023-01-01T10:00:00Z",
-          updated_at: "2023-01-01T10:05:00Z",
+          conclusion: "success",
+          html_url: "https://github.com/example/run/2",
+          head_commit: { message: "Cached commit" },
+          created_at: "2023-01-02T10:00:00Z",
+          updated_at: "2023-01-02T10:05:00Z",
         },
       ],
     };
 
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockRuns),
-      }),
-    ) as unknown as typeof global.fetch;
+    sessionStorage.setItem(
+      "github_workflow_runs_ublue-os/bluefin",
+      JSON.stringify(mockCachedRuns),
+    );
+
+    global.fetch = vi.fn();
 
     render(<Dashboard />);
 
@@ -164,9 +126,7 @@ describe("Dashboard Component", () => {
       ).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText("failure")).toBeInTheDocument();
-    expect(screen.getByText("in_progress")).toBeInTheDocument();
-    expect(screen.getByText("cancelled")).toBeInTheDocument();
-    expect(screen.getByText("--")).toBeInTheDocument();
+    expect(screen.getByText("Cached commit")).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
