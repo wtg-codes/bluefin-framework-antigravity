@@ -18,7 +18,6 @@ modules:
     install:
       - bats  # Essential for post-install OS validation
       - nodejs
-      - npm
       - pipx
 
   - type: systemd
@@ -53,5 +52,4 @@ modules:
 
   - type: script
     scripts:
-      - "install-gemini-cli.sh"
-      - "install-google-adk.sh"
+      - install-tools.sh
