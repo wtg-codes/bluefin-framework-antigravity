@@ -17,7 +17,7 @@ vi.mock("@docusaurus/useDocusaurusContext", () => ({
 
 describe("Dashboard Component", () => {
   let originalFetch: typeof global.fetch;
-  let consoleErrorMock: jest.SpyInstance;
+  let consoleErrorMock: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     originalFetch = global.fetch;
@@ -33,7 +33,7 @@ describe("Dashboard Component", () => {
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = vi.fn(() => new Promise(() => {}));
+    global.fetch = vi.fn(() => new Promise(() => {})) as unknown as typeof global.fetch;
 
     render(<Dashboard />);
 
@@ -43,7 +43,7 @@ describe("Dashboard Component", () => {
   it("handles API fetch error and logs it, then stops loading", async () => {
     // Mock fetch to reject with an error
     const testError = new Error("Network error");
-    global.fetch = vi.fn(() => Promise.reject(testError));
+    global.fetch = vi.fn(() => Promise.reject(testError)) as unknown as typeof global.fetch;
 
     render(<Dashboard />);
 
@@ -84,7 +84,7 @@ describe("Dashboard Component", () => {
       Promise.resolve({
         json: () => Promise.resolve(mockRuns),
       }),
-    ) as jest.Mock;
+    ) as unknown as typeof global.fetch;
 
     render(<Dashboard />);
 

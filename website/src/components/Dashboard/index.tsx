@@ -11,6 +11,8 @@ interface WorkflowRun {
   };
   created_at: string;
   updated_at: string;
+  formatted_started_at?: string;
+  duration_formatted?: string;
 }
 
 export default function Dashboard() {
@@ -25,7 +27,18 @@ export default function Dashboard() {
     )
       .then((res) => res.json())
       .then((data) => {
-        setWorkflowRuns(data.workflow_runs || []);
+        const runs = (data.workflow_runs || []).map((run: WorkflowRun) => {
+          const createdAt = new Date(run.created_at);
+          const updatedAt = new Date(run.updated_at);
+          return {
+            ...run,
+            formatted_started_at: createdAt.toLocaleString(),
+            duration_formatted: run.conclusion
+              ? `${Math.round((updatedAt.getTime() - createdAt.getTime()) / 60000)}m`
+              : "--",
+          };
+        });
+        setWorkflowRuns(runs);
         setLoading(false);
       })
       .catch((err) => {
@@ -92,13 +105,9 @@ export default function Dashboard() {
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {new Date(run.created_at).toLocaleString()}
+                    {run.formatted_started_at}
                   </td>
-                  <td style={{ padding: "10px" }}>
-                    {run.conclusion
-                      ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
-                      : "--"}
-                  </td>
+                  <td style={{ padding: "10px" }}>{run.duration_formatted}</td>
                 </tr>
               ))}
             </tbody>
