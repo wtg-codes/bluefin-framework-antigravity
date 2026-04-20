@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
+interface WorkflowRunRaw {
+  id: number;
+  status: string;
+  conclusion: string | null;
+  html_url: string;
+  head_commit: {
+    message: string;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
 interface WorkflowRun {
   id: number;
   status: string;
@@ -11,6 +23,8 @@ interface WorkflowRun {
   };
   created_at: string;
   updated_at: string;
+  formattedStarted: string;
+  formattedDuration: string;
 }
 
 export default function Dashboard() {
@@ -25,7 +39,25 @@ export default function Dashboard() {
     )
       .then((res) => res.json())
       .then((data) => {
-        setWorkflowRuns(data.workflow_runs || []);
+        const runsRaw: WorkflowRunRaw[] = data.workflow_runs || [];
+        const runsFormatted: WorkflowRun[] = runsRaw.map((run) => {
+          const formattedStarted = new Date(run.created_at).toLocaleString();
+          const durationMins = run.conclusion
+            ? Math.round(
+                (new Date(run.updated_at).getTime() -
+                  new Date(run.created_at).getTime()) /
+                  60000,
+              )
+            : null;
+          const formattedDuration = durationMins !== null ? `${durationMins}m` : "--";
+
+          return {
+            ...run,
+            formattedStarted,
+            formattedDuration,
+          };
+        });
+        setWorkflowRuns(runsFormatted);
         setLoading(false);
       })
       .catch((err) => {
@@ -92,12 +124,10 @@ export default function Dashboard() {
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {new Date(run.created_at).toLocaleString()}
+                    {run.formattedStarted}
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {run.conclusion
-                      ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
-                      : "--"}
+                    {run.formattedDuration}
                   </td>
                 </tr>
               ))}
