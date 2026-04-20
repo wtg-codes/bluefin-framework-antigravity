@@ -10,6 +10,18 @@ vi.mock('@theme/Heading', () => ({
   },
 }));
 
+vi.mock('@theme/Layout', () => ({
+  default: ({ children }: any) => {
+    return React.createElement('div', { 'data-testid': 'layout' }, children);
+  },
+}));
+
+vi.mock('@docusaurus/Link', () => ({
+  default: ({ children, to, ...props }: any) => {
+    return React.createElement('a', { href: to, ...props }, children);
+  },
+}));
+
 // Mock SVG imports
 // This handles the require('@site/static/img/...') pattern
 vi.mock('@site/static/img/undraw_docusaurus_mountain.svg', () => ({
