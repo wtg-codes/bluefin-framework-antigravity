@@ -79,7 +79,9 @@ export default function Dashboard() {
 
       <h2>Latest Builds</h2>
       {loading ? (
-        <p>Loading build status...</p>
+        <div aria-live="polite" aria-busy="true">
+          <p>Loading build status...</p>
+        </div>
       ) : (
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -114,7 +116,11 @@ export default function Dashboard() {
                             : run.conclusion === "failure"
                               ? "#dc3545"
                               : "#ffc107",
-                        color: "white",
+                        color:
+                          run.conclusion !== "success" &&
+                          run.conclusion !== "failure"
+                            ? "#212529"
+                            : "white",
                         fontWeight: "bold",
                       }}
                     >
@@ -126,8 +132,12 @@ export default function Dashboard() {
                       href={run.html_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      title={run.head_commit.message.split("\n")[0]}
+                      aria-label={`Commit: ${run.head_commit.message.split("\n")[0]}`}
                     >
-                      {run.head_commit.message.split("\n")[0].substring(0, 50)}
+                      {run.head_commit.message.split("\n")[0].length > 50
+                        ? `${run.head_commit.message.split("\n")[0].substring(0, 50)}...`
+                        : run.head_commit.message.split("\n")[0]}
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
@@ -140,7 +150,6 @@ export default function Dashboard() {
                         ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
                         : "--")}
                   </td>
-                  <td style={{ padding: "10px" }}>{run.duration_formatted}</td>
                 </tr>
               ))}
             </tbody>
