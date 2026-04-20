@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
+interface WorkflowRunRaw {
+  id: number;
+  status: string;
+  conclusion: string | null;
+  html_url: string;
+  head_commit: {
+    message: string;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
 interface WorkflowRun {
   id: number;
   status: string;
