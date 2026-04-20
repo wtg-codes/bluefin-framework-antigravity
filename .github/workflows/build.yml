@@ -85,6 +85,7 @@ jobs:
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
           maximize_build_space: true
+          extra_squeeze: true
 
       - name: Fetch Image Digest
         id: get-digest

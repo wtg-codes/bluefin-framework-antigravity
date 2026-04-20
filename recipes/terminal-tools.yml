@@ -1,0 +1,5 @@
+---
+type: brew
+install:
+  - node
+  - pipx

@@ -1,0 +1,10 @@
+---
+type: default-flatpaks
+system:
+  install:
+    - org.gnome.Loupe
+    - com.visualstudio.code
+    - com.google.Chrome
+    - com.slack.Slack
+    - com.discordapp.Discord
+    - de.haeckerfelix.Shortwave

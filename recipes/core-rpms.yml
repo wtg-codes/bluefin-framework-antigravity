@@ -1,0 +1,4 @@
+---
+type: rpm-ostree
+install:
+  - bats  # Essential for post-install OS validation
