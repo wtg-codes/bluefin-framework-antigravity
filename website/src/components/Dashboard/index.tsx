@@ -11,8 +11,8 @@ interface WorkflowRun {
   };
   created_at: string;
   updated_at: string;
-  formatted_started_at?: string;
-  duration_formatted?: string;
+  _formatted_created_at?: string;
+  _formatted_duration?: string;
 }
 
 export default function Dashboard() {
@@ -22,22 +22,36 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const CACHE_KEY = `github_workflow_runs_${REPO}`;
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    const cachedData = sessionStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+      try {
+        const parsed = JSON.parse(cachedData);
+        if (Date.now() - parsed.timestamp < CACHE_TTL) {
+          setWorkflowRuns(parsed.data);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to parse cached workflow runs", e);
+      }
+    }
+
     fetch(
       `https://api.github.com/repos/${REPO}/actions/workflows/build.yml/runs?per_page=5`,
     )
       .then((res) => res.json())
       .then((data) => {
-        const runs = (data.workflow_runs || []).map((run: WorkflowRun) => {
-          const createdAt = new Date(run.created_at);
-          const updatedAt = new Date(run.updated_at);
-          return {
-            ...run,
-            formatted_started_at: createdAt.toLocaleString(),
-            duration_formatted: run.conclusion
-              ? `${Math.round((updatedAt.getTime() - createdAt.getTime()) / 60000)}m`
-              : "--",
-          };
-        });
+        const runs = data.workflow_runs || [];
+        sessionStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            timestamp: Date.now(),
+            data: runs,
+          }),
+        );
         setWorkflowRuns(runs);
         setLoading(false);
       })
@@ -105,7 +119,14 @@ export default function Dashboard() {
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {run.formatted_started_at}
+                    {run._formatted_created_at ||
+                      new Date(run.created_at).toLocaleString()}
+                  </td>
+                  <td style={{ padding: "10px" }}>
+                    {run._formatted_duration ||
+                      (run.conclusion
+                        ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
+                        : "--")}
                   </td>
                   <td style={{ padding: "10px" }}>{run.duration_formatted}</td>
                 </tr>
