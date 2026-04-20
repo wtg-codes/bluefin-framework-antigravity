@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi, MockInstance } from "vitest";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import Dashboard from "./index";
@@ -17,7 +17,7 @@ vi.mock("@docusaurus/useDocusaurusContext", () => ({
 
 describe("Dashboard Component", () => {
   let originalFetch: typeof global.fetch;
-  let consoleErrorMock: jest.SpyInstance;
+  let consoleErrorMock: MockInstance;
 
   beforeEach(() => {
     originalFetch = global.fetch;
@@ -33,7 +33,7 @@ describe("Dashboard Component", () => {
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = vi.fn(() => new Promise(() => {}));
+    global.fetch = vi.fn(() => new Promise(() => {})) as unknown as typeof global.fetch;
 
     render(<Dashboard />);
 
@@ -43,7 +43,7 @@ describe("Dashboard Component", () => {
   it("handles API fetch error and logs it, then stops loading", async () => {
     // Mock fetch to reject with an error
     const testError = new Error("Network error");
-    global.fetch = vi.fn(() => Promise.reject(testError));
+    global.fetch = vi.fn(() => Promise.reject(testError)) as unknown as typeof global.fetch;
 
     render(<Dashboard />);
 
@@ -84,7 +84,7 @@ describe("Dashboard Component", () => {
       Promise.resolve({
         json: () => Promise.resolve(mockRuns),
       }),
-    ) as jest.Mock;
+    ) as unknown as typeof global.fetch;
 
     render(<Dashboard />);
 
@@ -96,5 +96,77 @@ describe("Dashboard Component", () => {
 
     expect(screen.getByText("Test commit 1")).toBeInTheDocument();
     expect(screen.getByText("success")).toBeInTheDocument();
+  });
+
+  it("handles successful API fetch with missing workflow_runs", async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({}), // missing workflow_runs
+      }),
+    ) as unknown as typeof global.fetch;
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    // Should render headers, but no runs
+    expect(screen.getByText("Status")).toBeInTheDocument();
+  });
+
+  it("handles different run statuses and conclusions", async () => {
+    const mockRuns = {
+      workflow_runs: [
+        {
+          id: 1,
+          status: "completed",
+          conclusion: "failure",
+          html_url: "https://github.com/example/run/1",
+          head_commit: { message: "Test commit 1" },
+          created_at: "2023-01-01T10:00:00Z",
+          updated_at: "2023-01-01T10:05:00Z",
+        },
+        {
+          id: 2,
+          status: "in_progress",
+          conclusion: null,
+          html_url: "https://github.com/example/run/2",
+          head_commit: { message: "Test commit 2" },
+          created_at: "2023-01-01T10:00:00Z",
+          updated_at: "2023-01-01T10:05:00Z",
+        },
+        {
+          id: 3,
+          status: "completed",
+          conclusion: "cancelled",
+          html_url: "https://github.com/example/run/3",
+          head_commit: { message: "Test commit 3" },
+          created_at: "2023-01-01T10:00:00Z",
+          updated_at: "2023-01-01T10:05:00Z",
+        },
+      ],
+    };
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockRuns),
+      }),
+    ) as unknown as typeof global.fetch;
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText("failure")).toBeInTheDocument();
+    expect(screen.getByText("in_progress")).toBeInTheDocument();
+    expect(screen.getByText("cancelled")).toBeInTheDocument();
+    expect(screen.getByText("--")).toBeInTheDocument();
   });
 });
