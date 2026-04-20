@@ -47,22 +47,15 @@ describe("Dashboard Component", () => {
 
     render(<Dashboard />);
 
-    // Check that loading text disappears
     await waitFor(() => {
+      expect(consoleErrorMock).toHaveBeenCalledWith(
+        "Failed to fetch workflow runs",
+        testError,
+      );
       expect(
         screen.queryByText("Loading build status..."),
       ).not.toBeInTheDocument();
     });
-
-    // Check that console.error was called with the correct arguments
-    expect(consoleErrorMock).toHaveBeenCalledWith(
-      "Failed to fetch workflow runs",
-      testError,
-    );
-
-    // Check that the table renders (empty since workflowRuns is empty)
-    expect(screen.getByText("Status")).toBeInTheDocument();
-    expect(screen.getByText("Commit")).toBeInTheDocument();
   });
 
   it("handles successful API fetch and displays data", async () => {

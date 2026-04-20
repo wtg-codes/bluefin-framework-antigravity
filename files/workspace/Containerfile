@@ -25,6 +25,16 @@ RUN mkdir -p /etc/apt/keyrings \
     && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" > /etc/apt/sources.list.d/antigravity-ide.list \
     && apt-get update && apt-get install -y antigravity && rm -rf /var/lib/apt/lists/*
 
+# Apply wrappers for Electron/Chrome stability in containers
+RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
+    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
+    && chmod +x /usr/bin/google-chrome-stable \
+    && if [ -f /usr/bin/antigravity ]; then \
+       mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
+       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity; \
+       chmod +x /usr/bin/antigravity; \
+       fi
+
 
 # 4. Install CNCF Tooling
 # Install kubectl
@@ -32,17 +42,20 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
 
 # Install k9s
-RUN curl -sS https://webi.sh/k9s | sh && mv /root/.local/bin/k9s /usr/local/bin/k9s
+RUN K9S_VERSION=$(curl -sS https://api.github.com/repos/derailed/k9s/releases/latest | jq -r .tag_name) \
+    && curl -sSLO "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_amd64.tar.gz" \
+    && curl -sSLO "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/checksums.sha256" \
+    && grep " k9s_Linux_amd64.tar.gz$" checksums.sha256 | sha256sum -c - \
+    && tar -xzf k9s_Linux_amd64.tar.gz k9s \
+    && install -o root -g root -m 0755 k9s /usr/local/bin/k9s \
+    && rm k9s_Linux_amd64.tar.gz checksums.sha256 k9s
 
 # Install helm
 RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh \
+    && echo "38b65f882d9cae3891755bdb03becc6a01ae6f9cb24826c191f219ddfee70a5d  get_helm.sh" | sha256sum -c - \
     && chmod 700 get_helm.sh \
     && ./get_helm.sh \
     && rm get_helm.sh
-
-# Install kind
-RUN curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 \
-    && chmod +x /usr/local/bin/kind
 
 # 5. Install AI Agent Dependencies
 # Gemini CLI
@@ -51,6 +64,6 @@ RUN npm install -g @google/gemini-cli
 # Google ADK (Agent Development Kit)
 # Using --ignore-installed to resolve PyYAML conflict observed in CI
 ENV PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin
-RUN pipx install google-adk
+RUN pipx install google-adk --pip-args="--retries 10"
 
 LABEL org.opencontainers.image.description="Declarative Student Workspace for wtgOS Cloud-Native Laboratory"
