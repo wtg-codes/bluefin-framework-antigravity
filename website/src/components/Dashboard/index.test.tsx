@@ -17,7 +17,7 @@ vi.mock("@docusaurus/useDocusaurusContext", () => ({
 
 describe("Dashboard Component", () => {
   let originalFetch: typeof global.fetch;
-  let consoleErrorMock: jest.SpyInstance;
+  let consoleErrorMock: any;
 
   beforeEach(() => {
     originalFetch = global.fetch;
@@ -33,7 +33,7 @@ describe("Dashboard Component", () => {
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = vi.fn(() => new Promise(() => {}));
+    global.fetch = vi.fn(() => new Promise(() => {})) as any;
 
     render(<Dashboard />);
 
@@ -84,7 +84,7 @@ describe("Dashboard Component", () => {
       Promise.resolve({
         json: () => Promise.resolve(mockRuns),
       }),
-    ) as jest.Mock;
+    ) as any;
 
     render(<Dashboard />);
 

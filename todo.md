@@ -1,3 +1,10 @@
+# Project Improvements Checklist
+
+1. [x] Fix invalid `actions/checkout@v4` versioning (pinned to stable `v4`).
+2. [x] Implement "Single Source of Truth" for documentation via MDX imports.
+3. [x] Migrate Build Dashboard to Docusaurus build pipeline.
+4. [x] Remove redundant `glib-compile-schemas` comments from `recipe.yml`.
+
 # 🛠️ Jules Implementation Plan: wtgOS "Sanity-Gravity" Remediation
 
 **Architects:** The Cloud-Native Linux Professor & Jorge Castro
