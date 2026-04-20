@@ -34,9 +34,6 @@ fi
 # 3. AI Agent Dependencies (Gemini CLI & Google ADK)
 # Mirrors the steps in files/workspace/Containerfile
 echo "🤖 Setting up Google ADK and Gemini CLI..."
-npm install -g @google/gemini-cli
-# Use --break-system-packages to bypass Ubuntu 24.04 PEP 668 restrictions in the VM
-pip install --break-system-packages --ignore-installed google-adk
 
 # 4. GCP & API Configuration (Optional / Conditional)
 # If you add GCP_PROJECT_ID to the Jules Environment Variables UI, this activates.

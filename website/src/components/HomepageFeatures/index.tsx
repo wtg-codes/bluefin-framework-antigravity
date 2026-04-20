@@ -1,3 +1,4 @@
+import React from "react";
 import type { ReactNode } from "react";
 import clsx from "clsx";
 import Heading from "@theme/Heading";
@@ -12,7 +13,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: "Easy to Use",
-    Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
+    Svg: () => <svg role="img" />,
     description: (
       <>
         Built for Computing students and Multi-Agent Systems orchestration with
@@ -22,7 +23,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Focus on What Matters",
-    Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
+    Svg: () => <svg role="img" />,
     description: (
       <>
         Based on Bluefin-DX with a read-only root filesystem, ensuring stability
@@ -32,7 +33,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Powered by React",
-    Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
+    Svg: () => <svg role="img" />,
     description: (
       <>
         Isolated AI agent execution with direct hardware passthrough (ROCm) for

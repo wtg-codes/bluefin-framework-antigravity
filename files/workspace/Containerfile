@@ -6,13 +6,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     jq \
-    ca-certificates \
     gnupg \
-    x11-apps \
-    dbus-x11 \
-    libnss3 \
-    libgbm1 \
-    libasound2t64 \
     python3-pip \
     pipx \
     nodejs \
@@ -31,15 +25,6 @@ RUN mkdir -p /etc/apt/keyrings \
     && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" > /etc/apt/sources.list.d/antigravity-ide.list \
     && apt-get update && apt-get install -y antigravity && rm -rf /var/lib/apt/lists/*
 
-# Apply wrappers for Electron/Chrome stability in containers
-RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
-    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
-    && chmod +x /usr/bin/google-chrome-stable \
-    && if [ -f /usr/bin/antigravity ]; then \
-       mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
-       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
-       && chmod +x /usr/bin/antigravity; \
-    fi
 
 # 4. Install CNCF Tooling
 # Install kubectl
@@ -50,10 +35,10 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN curl -sS https://webi.sh/k9s | sh && mv /root/.local/bin/k9s /usr/local/bin/k9s
 
 # Install helm
-RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list \
-    && apt-get update \
-    && apt-get install -y helm
+RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh \
+    && chmod 700 get_helm.sh \
+    && ./get_helm.sh \
+    && rm get_helm.sh
 
 # Install kind
 RUN curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 \

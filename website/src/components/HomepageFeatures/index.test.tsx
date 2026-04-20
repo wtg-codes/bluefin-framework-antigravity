@@ -16,13 +16,13 @@ describe('HomepageFeatures', () => {
     render(<HomepageFeatures />);
 
     expect(
-      screen.getByText(/Docusaurus was designed from the ground up/i)
+      screen.getByText(/Built for Computing students/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Docusaurus lets you focus on your docs/i)
+      screen.getByText(/Based on Bluefin-DX/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Extend or customize your website layout/i)
+      screen.getByText(/Isolated AI agent execution/i)
     ).toBeInTheDocument();
   });
 

@@ -1,10 +1,11 @@
+import { vi } from "vitest";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import Dashboard from "./index";
 import "@testing-library/jest-dom";
 
 // Mock the useDocusaurusContext hook
-jest.mock("@docusaurus/useDocusaurusContext", () => ({
+vi.mock("@docusaurus/useDocusaurusContext", () => ({
   __esModule: true,
   default: () => ({
     siteConfig: {
@@ -20,7 +21,7 @@ describe("Dashboard Component", () => {
 
   beforeEach(() => {
     originalFetch = global.fetch;
-    consoleErrorMock = jest
+    consoleErrorMock = vi
       .spyOn(console, "error")
       .mockImplementation(() => {});
   });
@@ -32,7 +33,7 @@ describe("Dashboard Component", () => {
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = jest.fn(() => new Promise(() => {}));
+    global.fetch = vi.fn(() => new Promise(() => {}));
 
     render(<Dashboard />);
 
@@ -42,7 +43,7 @@ describe("Dashboard Component", () => {
   it("handles API fetch error and logs it, then stops loading", async () => {
     // Mock fetch to reject with an error
     const testError = new Error("Network error");
-    global.fetch = jest.fn(() => Promise.reject(testError));
+    global.fetch = vi.fn(() => Promise.reject(testError));
 
     render(<Dashboard />);
 
@@ -79,7 +80,7 @@ describe("Dashboard Component", () => {
       ],
     };
 
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockRuns),
       }),
