@@ -31,3 +31,9 @@
 - [x] Create 'wtg-workspace' guide explaining Distrobox and ROCm.
 - [x] Create 'Software Management' policy guide (Flatpak/Homebrew).
 - [x] Ensure SSOT via MDX imports for architecture, security, and ops.
+
+## Sanity-Gravity Remediation (Completed)
+- [x] Remove host podman socket passthrough from `distrobox.ini`.
+- [x] Migrate testing to ephemeral headless Playwright containers.
+- [x] Declaratively lock dependencies at build time in `recipe.yml`.
+- [x] Remove `dpkg-divert` memory hack and use native `--shm-size` OCI flag.
