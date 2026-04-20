@@ -110,3 +110,7 @@ This document outlines the strict, multi-round Pull Request strategy to remediat
 
 ## 🏛️ Final Architect Verification
 Upon satisfying the Exit Criteria for all 4 Rounds, the repository will enforce a pristine, mathematically verifiable OCI image. The desktop returns to an appliance state, the agent is quarantined without root access, and dependencies are locked to the SHA256 digest at build time.
+- [x] Analyze the security vulnerability regarding insecure Helm download in `files/workspace/Containerfile`
+- [x] Implement a checksum verification using `sha256sum` to validate the downloaded `get_helm.sh` script before execution.
+- [x] Verify the implementation by running `bats tests/os_validation.bats` and verifying `Containerfile` changes.
+- [x] Commit the changes using PR security standards.
