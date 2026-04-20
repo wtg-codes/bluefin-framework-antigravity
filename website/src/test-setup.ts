@@ -21,3 +21,9 @@ vi.mock('@site/static/img/undraw_docusaurus_tree.svg', () => ({
 vi.mock('@site/static/img/undraw_docusaurus_react.svg', () => ({
   default: () => React.createElement('svg', { role: 'img' }),
 }));
+
+vi.mock('@docusaurus/useDocusaurusContext', () => ({
+  default: () => ({
+    siteConfig: { title: 'Test Site', tagline: 'Test Tagline' }
+  })
+}));

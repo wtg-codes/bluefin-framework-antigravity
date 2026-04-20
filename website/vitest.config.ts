@@ -13,6 +13,7 @@ export default defineConfig({
     alias: {
       '@site': path.resolve(__dirname, '.'),
       '@theme': path.resolve(__dirname, 'src/theme_mock'),
+      '@docusaurus/useDocusaurusContext': path.resolve(__dirname, 'src/theme_mock/useDocusaurusContext.ts'),
     },
   },
 });

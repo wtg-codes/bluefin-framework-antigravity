@@ -6,13 +6,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     jq \
-    ca-certificates \
     gnupg \
-    x11-apps \
-    dbus-x11 \
-    libnss3 \
-    libgbm1 \
-    libasound2t64 \
     python3-pip \
     pipx \
     nodejs \
@@ -31,15 +25,6 @@ RUN mkdir -p /etc/apt/keyrings \
     && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" > /etc/apt/sources.list.d/antigravity-ide.list \
     && apt-get update && apt-get install -y antigravity && rm -rf /var/lib/apt/lists/*
 
-# Apply wrappers for Electron/Chrome stability in containers
-RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
-    && printf '#!/bin/bash\nexec /usr/bin/google-chrome-stable.orig --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome-stable \
-    && chmod +x /usr/bin/google-chrome-stable \
-    && if [ -f /usr/bin/antigravity ]; then \
-       mv /usr/bin/antigravity /usr/bin/antigravity.orig; \
-       printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity \
-       && chmod +x /usr/bin/antigravity; \
-    fi
 
 # 4. Install CNCF Tooling
 # Install kubectl

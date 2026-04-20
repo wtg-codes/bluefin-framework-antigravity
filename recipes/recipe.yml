@@ -47,3 +47,8 @@ modules:
           - de.haeckerfelix.Shortwave
 
   - type: signing
+
+  - type: script
+    scripts:
+      - "npm install -g @google/gemini-cli"
+      - "pipx install google-adk"
