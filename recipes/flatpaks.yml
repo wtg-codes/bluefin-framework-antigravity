@@ -1,5 +1,5 @@
 ---
-type: default-flatpaks
+type: default-flatpaks@v1
 system:
   install:
     - org.gnome.Loupe
