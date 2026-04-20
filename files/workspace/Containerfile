@@ -36,6 +36,7 @@ RUN curl -sS https://webi.sh/k9s | sh && mv /root/.local/bin/k9s /usr/local/bin/
 
 # Install helm
 RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh \
+    && echo "38b65f882d9cae3891755bdb03becc6a01ae6f9cb24826c191f219ddfee70a5d  get_helm.sh" | sha256sum -c - \
     && chmod 700 get_helm.sh \
     && ./get_helm.sh \
     && rm get_helm.sh
