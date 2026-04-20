@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi, MockInstance } from "vitest";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import Dashboard from "./index";
