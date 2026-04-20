@@ -52,3 +52,4 @@ modules:
     scripts:
       - "npm install -g @google/gemini-cli"
       - "pipx install google-adk"
+      - "curl -Lo /usr/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 && chmod +x /usr/bin/kind"
