@@ -1,1 +1,5 @@
-Update core architectural and operational directives in `AGENTS.md`. This includes constraints on `rpm-ostree`, usage of devcontainers, avoiding nested virtualization, strict requirements for Docusaurus testing, and Project Bluefin philosophies. A type error in `website/src/components/Dashboard/index.tsx` was fixed along with this documentation update.
+Fixes several CI issues that prevented the project from building successfully:
+- Fixes `yamllint` errors by ignoring `node_modules` folders.
+- Fixes `bluebuild` out of disk space errors by using the `extra_squeeze: true` option on github-action.
+- Fixes `default-flatpaks` module schema syntax in `recipes/recipe.yml`.
+- Shifts from imperative `script` commands to declarative `brew` modules in `recipes/recipe.yml`.

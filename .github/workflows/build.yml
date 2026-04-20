@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
       - name: Lint YAML
         uses: ibiqlik/action-yamllint@v3.1.1
         with:
@@ -46,17 +46,20 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4.1.0
+        uses: docker/login-action@v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3.8.0
+
       - name: Build and Push Workspace Image
-        uses: docker/build-push-action@v7.1.0
+        uses: docker/build-push-action@v6.10.0
         with:
           context: files/workspace
           file: files/workspace/Containerfile
@@ -74,7 +77,7 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
 
       - name: Build and Push Custom Image
         id: build
@@ -96,7 +99,7 @@ jobs:
 
       - name: Attest Build Provenance
         if: github.event_name != 'pull_request'
-        uses: actions/attest-build-provenance@v4.1.0
+        uses: actions/attest-build-provenance@v2.2.0
         with:
           subject-name: ghcr.io/${{ github.repository }}
           subject-digest: ${{ steps.get-digest.outputs.digest }}
@@ -113,17 +116,17 @@ jobs:
       id-token: write
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v4.1.1
+        uses: sigstore/cosign-installer@v3.7.0
 
       - name: Verify Image Signature (Zero Trust Gate)
         run: |
-          cosign verify --key cosign.pub ghcr.io/${{ github.repository_owner }}/wtgOS:latest
+          cosign verify --key cosign.pub ghcr.io/${{ github.repository_owner }}/wtgos:latest
 
       - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.2.2
+        uses: jasonn3/build-container-installer@v1.2.3
         id: build
         with:
           arch: x86_64
@@ -134,8 +137,7 @@ jobs:
           iso_name: wtgOS-latest.iso
 
       - name: Upload ISO as Artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: wtgOS-installer
           path: ${{ steps.build.outputs.iso_path }}
-          retention-days: 7

@@ -1,10 +1,9 @@
-🎯 **What:** The vulnerability fixed was the passing of the host's `podman.sock` into the workspace, which opened up a privilege escalation path. The PR before this removed the socket, but failed to preserve the intended functionality for `kind`. This PR moves `kind` execution to the immutable host.
+This pull request addresses several issues in the CI/CD pipeline preventing the build from passing:
+1. `yamllint` checks were failing because dependency file folders (`node_modules/` and `website/node_modules/`) were not ignored.
+2. The GitHub action runner was running out of disk space during the massive image build process.
+3. The `recipe.yml` failed schema validations due to outdated `default-flatpaks` configurations.
+4. Imperative shell script installations in `recipe.yml` were used over declarative module setups.
 
-⚠️ **Risk:** The potential impact if left unfixed was that an AI agent or any process in the workspace could mount root paths via the passed-through Podman socket. Alternatively, setting up a nested podman inside the container would violate the project's 'no nested virtualization' mandate, causing cgroup/uid map exhaustion.
+The fixes entail configuring `.yamllint.yml` to ignore dependency files, adding `extra_squeeze: true` to the `.github/workflows/build.yml` to mitigate the low disk space error, updating the flatpak installation schema to conform to modern formats, and replacing manual `npm` and `pipx` scripts with the official `brew` module.
 
-🛡️ **Solution:** How the fix addresses the vulnerability:
-1. Removed `kind` installation from the workspace container (`files/workspace/Containerfile`).
-2. Added `kind` installation script to the host build via `recipes/recipe.yml`.
-3. Configured `files/justfiles/wtgOS.just` (which executes on the host) to inject the generated `kubeconfig` back into the workspace's home directory.
-
-The workspace is now correctly treated as a client connecting to a cluster over the network, fully eliminating the need for nested podman or host socket access.
+Note: The ISO build process intentionally skips pull requests via the `if: github.event_name != 'pull_request'` condition in `.github/workflows/build.yml`. It will automatically trigger when this code is merged into `main` or it can be manually dispatched.

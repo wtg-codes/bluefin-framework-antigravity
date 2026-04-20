@@ -10,10 +10,12 @@ setup() {
         export IS_LOCAL_CI=true
         export DISTROBOX_INI="files/usr/share/bluefin-framework/wtgOS/distrobox.ini"
         export RECIPE_FILE="recipes/recipe.yml"
+        export FLATPAKS_FILE="recipes/flatpaks.yml"
     else
         export IS_LOCAL_CI=false
         export DISTROBOX_INI="/usr/share/bluefin-framework/wtgOS/distrobox.ini"
         export RECIPE_FILE="/usr/etc/bluebuild/recipes/recipe.yml"
+        export FLATPAKS_FILE="/usr/etc/bluebuild/recipes/flatpaks.yml"
     fi
 }
 
@@ -60,17 +62,17 @@ setup() {
 }
 
 @test "Recipe contains default-flatpaks module configuration" {
-    grep -q "type: default-flatpaks" "$RECIPE_FILE"
+    grep -q "type: default-flatpaks" "$FLATPAKS_FILE"
 }
 
 @test "Recipe flatpaks configuration contains expected communication apps" {
-    grep -q "com.slack.Slack" "$RECIPE_FILE"
-    grep -q "com.discordapp.Discord" "$RECIPE_FILE"
+    grep -q "com.slack.Slack" "$FLATPAKS_FILE"
+    grep -q "com.discordapp.Discord" "$FLATPAKS_FILE"
 }
 
 @test "Recipe flatpaks configuration includes developer tools" {
-    grep -q "com.visualstudio.code" "$RECIPE_FILE"
-    grep -q "com.google.Chrome" "$RECIPE_FILE"
+    grep -q "com.visualstudio.code" "$FLATPAKS_FILE"
+    grep -q "com.google.Chrome" "$FLATPAKS_FILE"
 }
 
 @test "fwupd service is active (Framework hardware updates)" {
