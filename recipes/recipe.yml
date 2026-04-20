@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: wtgOS
+name: wtgos
 description: wtgOS - Bluefin-DX + Google dev tools for Framework 13.
 
 base-image: ghcr.io/ublue-os/bluefin-dx
@@ -17,6 +17,8 @@ modules:
   - type: rpm-ostree
     install:
       - bats  # Essential for post-install OS validation
+      - nodejs
+      - pipx
 
   - type: systemd
     system:
@@ -50,6 +52,4 @@ modules:
 
   - type: script
     scripts:
-      - "npm install -g @google/gemini-cli"
-      - "pipx install google-adk"
-      - "curl -Lo /usr/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 && chmod +x /usr/bin/kind"
+      - install-tools.sh
