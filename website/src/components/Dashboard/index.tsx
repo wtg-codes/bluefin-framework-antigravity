@@ -128,6 +128,7 @@ export default function Dashboard() {
                         ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
                         : "--")}
                   </td>
+                  <td style={{ padding: "10px" }}>{run.duration_formatted}</td>
                 </tr>
               ))}
             </tbody>
