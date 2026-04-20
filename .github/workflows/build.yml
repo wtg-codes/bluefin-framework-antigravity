@@ -78,7 +78,7 @@ jobs:
 
       - name: Build and Push Custom Image
         id: build
-        uses: blue-build/github-action@c98a71685dcc2fc79d290a09e4a6cb079b05801e
+        uses: blue-build/github-action@v1.8
         with:
           recipe: recipe.yml
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
