@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi, MockInstance } from "vitest";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import Dashboard from "./index";
@@ -17,23 +17,22 @@ vi.mock("@docusaurus/useDocusaurusContext", () => ({
 
 describe("Dashboard Component", () => {
   let originalFetch: typeof global.fetch;
-  let consoleErrorMock: ReturnType<typeof vi.spyOn>;
+  let consoleErrorMock: any;
 
   beforeEach(() => {
     originalFetch = global.fetch;
-    consoleErrorMock = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    consoleErrorMock = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
     consoleErrorMock.mockRestore();
+    sessionStorage.clear();
   });
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = vi.fn(() => new Promise<Response>(() => {}));
+    global.fetch = vi.fn(() => new Promise(() => {})) as any;
 
     render(<Dashboard />);
 
@@ -81,9 +80,7 @@ describe("Dashboard Component", () => {
     };
 
     global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockRuns),
-      }),
+      Promise.resolve({ json: () => Promise.resolve(mockRuns) }),
     ) as any;
 
     render(<Dashboard />);
@@ -96,5 +93,40 @@ describe("Dashboard Component", () => {
 
     expect(screen.getByText("Test commit 1")).toBeInTheDocument();
     expect(screen.getByText("success")).toBeInTheDocument();
+  });
+
+  it("uses cached data from sessionStorage if valid", async () => {
+    const mockCachedRuns = {
+      timestamp: Date.now(),
+      data: [
+        {
+          id: 2,
+          status: "completed",
+          conclusion: "success",
+          html_url: "https://github.com/example/run/2",
+          head_commit: { message: "Cached commit" },
+          created_at: "2023-01-02T10:00:00Z",
+          updated_at: "2023-01-02T10:05:00Z",
+        },
+      ],
+    };
+
+    sessionStorage.setItem(
+      "github_workflow_runs_ublue-os/bluefin",
+      JSON.stringify(mockCachedRuns),
+    );
+
+    global.fetch = vi.fn();
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Cached commit")).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });

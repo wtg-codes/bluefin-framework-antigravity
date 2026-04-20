@@ -17,6 +17,8 @@ modules:
   - type: rpm-ostree
     install:
       - bats  # Essential for post-install OS validation
+      - nodejs
+      - pipx
 
   - type: systemd
     system:
@@ -50,4 +52,4 @@ modules:
 
   - type: script
     scripts:
-      - "install-agent-deps.sh"
+      - install-tools.sh
