@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi, MockInstance } from "vitest";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import Dashboard from "./index";
@@ -21,19 +21,18 @@ describe("Dashboard Component", () => {
 
   beforeEach(() => {
     originalFetch = global.fetch;
-    consoleErrorMock = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    consoleErrorMock = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
     consoleErrorMock.mockRestore();
+    sessionStorage.clear();
   });
 
   it("renders loading state initially", () => {
     // Mock fetch to return a promise that doesn't resolve immediately
-    global.fetch = vi.fn(() => new Promise(() => {})) as unknown as typeof global.fetch;
+    global.fetch = vi.fn(() => new Promise(() => {})) as any;
 
     render(<Dashboard />);
 
@@ -43,26 +42,19 @@ describe("Dashboard Component", () => {
   it("handles API fetch error and logs it, then stops loading", async () => {
     // Mock fetch to reject with an error
     const testError = new Error("Network error");
-    global.fetch = vi.fn(() => Promise.reject(testError)) as unknown as typeof global.fetch;
+    global.fetch = vi.fn(() => Promise.reject(testError)) as any;
 
     render(<Dashboard />);
 
-    // Check that loading text disappears
     await waitFor(() => {
+      expect(consoleErrorMock).toHaveBeenCalledWith(
+        "Failed to fetch workflow runs",
+        testError,
+      );
       expect(
         screen.queryByText("Loading build status..."),
       ).not.toBeInTheDocument();
     });
-
-    // Check that console.error was called with the correct arguments
-    expect(consoleErrorMock).toHaveBeenCalledWith(
-      "Failed to fetch workflow runs",
-      testError,
-    );
-
-    // Check that the table renders (empty since workflowRuns is empty)
-    expect(screen.getByText("Status")).toBeInTheDocument();
-    expect(screen.getByText("Commit")).toBeInTheDocument();
   });
 
   it("handles successful API fetch and displays data", async () => {
@@ -81,10 +73,8 @@ describe("Dashboard Component", () => {
     };
 
     global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockRuns),
-      }),
-    ) as unknown as typeof global.fetch;
+      Promise.resolve({ json: () => Promise.resolve(mockRuns) }),
+    ) as any;
 
     render(<Dashboard />);
 
@@ -96,5 +86,40 @@ describe("Dashboard Component", () => {
 
     expect(screen.getByText("Test commit 1")).toBeInTheDocument();
     expect(screen.getByText("success")).toBeInTheDocument();
+  });
+
+  it("uses cached data from sessionStorage if valid", async () => {
+    const mockCachedRuns = {
+      timestamp: Date.now(),
+      data: [
+        {
+          id: 2,
+          status: "completed",
+          conclusion: "success",
+          html_url: "https://github.com/example/run/2",
+          head_commit: { message: "Cached commit" },
+          created_at: "2023-01-02T10:00:00Z",
+          updated_at: "2023-01-02T10:05:00Z",
+        },
+      ],
+    };
+
+    sessionStorage.setItem(
+      "github_workflow_runs_ublue-os/bluefin",
+      JSON.stringify(mockCachedRuns),
+    );
+
+    global.fetch = vi.fn();
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Cached commit")).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });

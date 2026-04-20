@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
-interface WorkflowRun {
+interface WorkflowRunRaw {
   id: number;
   status: string;
   conclusion: string | null;
@@ -13,6 +13,30 @@ interface WorkflowRun {
   updated_at: string;
 }
 
+interface WorkflowRun {
+  id: number;
+  status: string;
+  conclusion: string | null;
+  html_url: string;
+  head_commit: {
+    message: string;
+  };
+  created_at: string;
+  updated_at: string;
+  _formatted_created_at: string;
+  _formatted_duration: string;
+}
+
+const formatWorkflowRun = (run: WorkflowRunRaw): WorkflowRun => {
+  return {
+    ...run,
+    _formatted_created_at: new Date(run.created_at).toLocaleString(),
+    _formatted_duration: run.conclusion
+      ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
+      : "--",
+  };
+};
+
 export default function Dashboard() {
   const { siteConfig } = useDocusaurusContext();
   const REPO = `${siteConfig.organizationName}/${siteConfig.projectName}`;
@@ -20,12 +44,42 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const CACHE_KEY = `github_workflow_runs_${REPO}`;
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    const cachedData = sessionStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+      try {
+        const parsed = JSON.parse(cachedData);
+        if (Date.now() - parsed.timestamp < CACHE_TTL) {
+          const runs = (parsed.data as (WorkflowRun | WorkflowRunRaw)[]).map(
+            (run) =>
+              "_formatted_created_at" in run ? run : formatWorkflowRun(run),
+          );
+          setWorkflowRuns(runs);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to parse cached workflow runs", e);
+      }
+    }
+
     fetch(
       `https://api.github.com/repos/${REPO}/actions/workflows/build.yml/runs?per_page=5`,
     )
       .then((res) => res.json())
       .then((data) => {
-        setWorkflowRuns(data.workflow_runs || []);
+        const rawRuns: WorkflowRunRaw[] = data.workflow_runs || [];
+        const formattedRuns = rawRuns.map(formatWorkflowRun);
+        sessionStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            timestamp: Date.now(),
+            data: formattedRuns,
+          }),
+        );
+        setWorkflowRuns(formattedRuns);
         setLoading(false);
       })
       .catch((err) => {
@@ -40,7 +94,9 @@ export default function Dashboard() {
 
       <h2>Latest Builds</h2>
       {loading ? (
-        <p>Loading build status...</p>
+        <div aria-live="polite" aria-busy="true">
+          <p>Loading build status...</p>
+        </div>
       ) : (
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -75,7 +131,11 @@ export default function Dashboard() {
                             : run.conclusion === "failure"
                               ? "#dc3545"
                               : "#ffc107",
-                        color: "white",
+                        color:
+                          run.conclusion !== "success" &&
+                          run.conclusion !== "failure"
+                            ? "#212529"
+                            : "white",
                         fontWeight: "bold",
                       }}
                     >
@@ -87,17 +147,16 @@ export default function Dashboard() {
                       href={run.html_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      title={run.head_commit.message.split("\n")[0]}
+                      aria-label={`Commit: ${run.head_commit.message.split("\n")[0]}`}
                     >
-                      {run.head_commit.message.split("\n")[0].substring(0, 50)}
+                      {run.head_commit.message.split("\n")[0].length > 50
+                        ? `${run.head_commit.message.split("\n")[0].substring(0, 50)}...`
+                        : run.head_commit.message.split("\n")[0]}
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {new Date(run.created_at).toLocaleString()}
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    {run.conclusion
-                      ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
-                      : "--"}
+                    {run._formatted_created_at}
                   </td>
                 </tr>
               ))}

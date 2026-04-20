@@ -11,6 +11,8 @@ setup-antigravity: setup-workspace
 start-cluster:
     @echo "Starting local Kubernetes cluster (kind) via Podman..."
     @kind create cluster --provider podman
+    @mkdir -p ~/.local/share/wtg-workspace/.kube
+    @cp ~/.kube/config ~/.local/share/wtg-workspace/.kube/config || true
 
 
 # test-vlm-ui: spins up an ephemeral playwright testing container
