@@ -11,6 +11,8 @@ interface WorkflowRun {
   };
   created_at: string;
   updated_at: string;
+  _formatted_created_at?: string;
+  _formatted_duration?: string;
 }
 
 export default function Dashboard() {
@@ -117,12 +119,14 @@ export default function Dashboard() {
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {new Date(run.created_at).toLocaleString()}
+                    {run._formatted_created_at ||
+                      new Date(run.created_at).toLocaleString()}
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {run.conclusion
-                      ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
-                      : "--"}
+                    {run._formatted_duration ||
+                      (run.conclusion
+                        ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
+                        : "--")}
                   </td>
                 </tr>
               ))}
