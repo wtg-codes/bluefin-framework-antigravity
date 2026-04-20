@@ -12,8 +12,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@site': path.resolve(__dirname, '.'),
+      '@theme/Heading': path.resolve(__dirname, 'src/theme_mock/Heading.tsx'),
+      '@theme/Layout': path.resolve(__dirname, 'src/theme_mock/Layout.tsx'),
       '@theme': path.resolve(__dirname, 'src/theme_mock'),
       '@docusaurus/useDocusaurusContext': path.resolve(__dirname, 'src/theme_mock/useDocusaurusContext.ts'),
+      '@docusaurus/Link': path.resolve(__dirname, 'src/theme_mock/Link.tsx'),
     },
   },
 });
