@@ -50,5 +50,5 @@ modules:
 
   - type: script
     scripts:
-      - "npm install -g @google/gemini-cli"
-      - "pipx install google-adk"
+      - "install-gemini-cli.sh"
+      - "install-google-adk.sh"
