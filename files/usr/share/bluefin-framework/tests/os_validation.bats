@@ -47,6 +47,14 @@ setup() {
     [ -f "files/workspace/Containerfile" ] && grep -q "antigravity" "files/workspace/Containerfile"
 }
 
+@test "Workspace Containerfile kubectl checksum verification" {
+    if [ "$IS_LOCAL_CI" = "false" ]; then
+        skip "Source files not available on live system"
+    fi
+    # Ensure kubectl installation includes sha256sum verification
+    grep -A 5 "# Install kubectl" "files/workspace/Containerfile" | grep -q "sha256sum -c"
+}
+
 @test "GitHub Actions workflows resolve Node 20 deprecation" {
     # This test only makes sense in a local/CI context where the source repo is present
     if [ "$IS_LOCAL_CI" = "false" ]; then
