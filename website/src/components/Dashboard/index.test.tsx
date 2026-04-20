@@ -122,4 +122,48 @@ describe("Dashboard Component", () => {
     expect(screen.getByText("Cached commit")).toBeInTheDocument();
     expect(global.fetch).not.toHaveBeenCalled();
   });
+
+  it("handles JSON parse error in sessionStorage and falls back to fetch", async () => {
+    // Set invalid JSON in sessionStorage
+    sessionStorage.setItem(
+      "github_workflow_runs_ublue-os/bluefin",
+      "{ invalid json }",
+    );
+
+    const mockRuns = {
+      workflow_runs: [
+        {
+          id: 3,
+          status: "completed",
+          conclusion: "success",
+          html_url: "https://github.com/example/run/3",
+          head_commit: { message: "Fetched after parse error" },
+          created_at: "2023-01-03T10:00:00Z",
+          updated_at: "2023-01-03T10:05:00Z",
+        },
+      ],
+    };
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve(mockRuns) }),
+    ) as any;
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    // Verify console.error was called
+    expect(consoleErrorMock).toHaveBeenCalledWith(
+      "Failed to parse cached workflow runs",
+      expect.any(SyntaxError),
+    );
+
+    // Verify it fell back to fetching and displayed the data
+    expect(screen.getByText("Fetched after parse error")).toBeInTheDocument();
+    expect(global.fetch).toHaveBeenCalled();
+  });
 });
