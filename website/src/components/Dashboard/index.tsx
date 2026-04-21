@@ -97,6 +97,10 @@ export default function Dashboard() {
         <div aria-live="polite" aria-busy="true">
           <p>Loading build status...</p>
         </div>
+      ) : workflowRuns.length === 0 ? (
+        <div className="alert alert--info" role="alert">
+          <p className="margin-bottom--none">No recent builds found.</p>
+        </div>
       ) : (
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -158,6 +162,7 @@ export default function Dashboard() {
                   <td style={{ padding: "10px" }}>
                     {run._formatted_created_at}
                   </td>
+                  <td style={{ padding: "10px" }}>{run._formatted_duration}</td>
                 </tr>
               ))}
             </tbody>
