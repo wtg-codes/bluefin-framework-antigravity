@@ -4,7 +4,7 @@ name: wtgos
 description: wtgOS - Bluefin-DX + Google dev tools for Framework 13.
 
 base-image: ghcr.io/ublue-os/bluefin-dx
-image-version: latest
+image-version: 40
 
 modules:
   - type: files
