@@ -1,0 +1,87 @@
+---
+name: Build Monthly Live ISO
+"on":
+  schedule:
+    # Runs at 00:00 (midnight) on the 1st day of every month
+    - cron: '0 0 1 * *'
+  # The critical trigger for your "Big Releases"
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Version tag for this major release (e.g., v1.2.0)'
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-live-iso:
+    name: Build Installer ISO
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+
+      - name: Verify Image Signature (Zero Trust Gate)
+        run: |
+          cosign verify --key cosign.pub ghcr.io/${{ github.repository_owner }}/wtgos:latest
+
+      - name: Maximize Build Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+
+      - name: Build Custom ISO
+        uses: jasonn3/build-container-installer@v1.2.3
+        id: build
+        with:
+          arch: x86_64
+          image_name: wtgos
+          image_repo: ghcr.io/${{ github.repository_owner }}
+          image_tag: latest
+          # AUTHORITATIVE FIX 1: Version Sync
+          # Bluefin-DX 'latest' tracks Fedora 41. If you tell Lorax to build
+          # a Fedora 40 boot tree for a Fedora 41 container, the UEFI will fail.
+          version: 41
+
+          # AUTHORITATIVE FIX 2: Desktop Variant
+          # Bluefin is built on GNOME. You MUST declare Silverblue, or Lorax
+          # will not structure the EFI and OSTree partitions correctly.
+          variant: Silverblue
+
+          # AUTHORITATIVE FIX 3: Secure Boot MOK Enrollment
+          # Custom OCI images are signed by your GitHub Actions, not Microsoft.
+          # This prompts the UEFI to enroll your custom key on first boot so
+          # the motherboard doesn't block the OS.
+          enrollment_password: 'universalblue'
+
+          # To make an offline ISO, you MUST tell jasonn3 action to use a live image.
+          iso_name: ${{ github.event.inputs.release_version != '' && format('wtgOS-{0}-live.iso', github.event.inputs.release_version) || 'wtgOS-monthly-live.iso' }}
+
+      - name: Publish ISO to Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'   # Only publish when pushing to main
+        with:
+          tag_name: ${{ github.event.inputs.release_version || 'monthly-live-iso' }}
+          name: ${{ github.event.inputs.release_version != '' && format('wtgOS {0} Live Installer', github.event.inputs.release_version) || 'wtgOS Monthly Live Installer' }}
+          files: |
+            ${{ steps.build.outputs.iso_path }}/${{ github.event.inputs.release_version != '' && format('wtgOS-{0}-live.iso', github.event.inputs.release_version) || 'wtgOS-monthly-live.iso' }}
+          prerelease: false
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
