@@ -111,7 +111,7 @@ jobs:
     needs: bluebuild
     if: github.event_name != 'pull_request'
     permissions:
-      contents: read
+      contents: write
       packages: write
       id-token: write
     steps:
@@ -125,7 +125,7 @@ jobs:
         run: |
           cosign verify --key cosign.pub ghcr.io/${{ github.repository_owner }}/wtgos:latest
 
-      - name: Build ISO
+      - name: Build Custom ISO
         uses: jasonn3/build-container-installer@v1.2.3
         id: build
         with:
@@ -133,11 +133,33 @@ jobs:
           image_name: wtgos
           image_repo: ghcr.io/${{ github.repository_owner }}
           image_tag: latest
-          version: 40
+          # AUTHORITATIVE FIX 1: Version Sync
+          # Bluefin-DX 'latest' tracks Fedora 41. If you tell Lorax to build
+          # a Fedora 40 boot tree for a Fedora 41 container, the UEFI will fail.
+          version: 41
+
+          # AUTHORITATIVE FIX 2: Desktop Variant
+          # Bluefin is built on GNOME. You MUST declare Silverblue, or Lorax
+          # will not structure the EFI and OSTree partitions correctly.
+          variant: Silverblue
+
+          # AUTHORITATIVE FIX 3: Secure Boot MOK Enrollment
+          # Custom OCI images are signed by your GitHub Actions, not Microsoft.
+          # This prompts the UEFI to enroll your custom key on first boot so
+          # the motherboard doesn't block the OS.
+          enrollment_password: 'universalblue'
+
           iso_name: wtgOS-latest.iso
 
-      - name: Upload ISO as Artifact
-        uses: actions/upload-artifact@v4.5.0
+      - name: Publish ISO to Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'   # Only publish when pushing to main
         with:
-          name: wtgOS-installer
-          path: ${{ steps.build.outputs.iso_path }}
+          tag_name: "latest-iso"
+          name: "wtgOS Latest Installer"
+          files: |
+            ${{ steps.build.outputs.iso_path }}/wtgOS-latest.iso
+          prerelease: false
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
