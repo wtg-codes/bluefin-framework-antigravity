@@ -81,7 +81,7 @@ jobs:
 
       - name: Build and Push Custom Image
         id: build
-        uses: blue-build/github-action@v1.8.1
+        uses: blue-build/github-action@v1.8
         with:
           recipe: recipe.yml
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
@@ -126,7 +126,7 @@ jobs:
           cosign verify --key cosign.pub ghcr.io/${{ github.repository_owner }}/wtgos:latest
 
       - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.2.4
+        uses: jasonn3/build-container-installer@v1.2.3
         id: build
         with:
           arch: x86_64
@@ -134,6 +134,7 @@ jobs:
           image_repo: ghcr.io/${{ github.repository_owner }}
           image_tag: latest
           version: 40
+          variant: Silverblue
           iso_name: wtgOS-latest.iso
 
       - name: Upload ISO as Artifact
