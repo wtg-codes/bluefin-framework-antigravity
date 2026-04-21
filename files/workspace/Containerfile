@@ -37,9 +37,13 @@ RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
 
 
 # 4. Install CNCF Tooling
-# Install kubectl
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-    && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
+# Install kubectl securely
+RUN KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt) \
+    && curl -sLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
+    && curl -sLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256" \
+    && echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c - \
+    && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
+    && rm kubectl kubectl.sha256
 
 # Install k9s
 RUN K9S_VERSION=$(curl -sS https://api.github.com/repos/derailed/k9s/releases/latest | jq -r .tag_name) \

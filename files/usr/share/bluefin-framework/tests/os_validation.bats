@@ -92,3 +92,11 @@ setup() {
     [[ "$output" == *"amd_pstate=active"* ]]
     [[ "$output" == *"amdgpu.sg_display=0"* ]]
 }
+
+@test "Workspace Containerfile performs integrity checks on binaries" {
+    if [ "$IS_LOCAL_CI" = "false" ]; then
+        skip "Source files not available on live system"
+    fi
+    [ -f "files/workspace/Containerfile" ]
+    grep -q "sha256sum -c" "files/workspace/Containerfile"
+}
