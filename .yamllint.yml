@@ -8,3 +8,6 @@ rules:
   truthy: disable
   comments-indentation:
     level: error
+ignore: |
+  node_modules/
+  website/node_modules/

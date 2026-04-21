@@ -1,14 +1,7 @@
-# Code Review Request: 🔒 Fix Chromium/Electron Sandbox Vulnerability
+This pull request aims to fix three separate CI/CD issues:
+1. Fixes `.yamllint.yml` to properly ignore `node_modules/` and `website/node_modules/` which caused the `lint` job to fail.
+2. Updates `recipes/recipe.yml` `default-flatpaks` module schema to match the `system` syntax rather than `configurations`, which was preventing the image from building successfully.
+3. Swaps imperative shell package installations in `recipes/recipe.yml` (e.g. `npm install ...` via `script`) to declarative `brew` modules.
+4. Adds `extra_squeeze: true` to `.github/workflows/build.yml` for the `bluebuild` action to mitigate `No space left on device` errors when building `bluefin-dx`.
 
-## Changes
-1. Removed the explicit `--no-sandbox` flags from Chromium and Electron wrapper scripts in the `Containerfile` (`files/workspace/Containerfile`) to properly utilize security controls.
-
-## Rationale
-🎯 **What:** The vulnerability fixed was the explicit disabling of Chromium and Electron security sandboxing features via `--no-sandbox` flags in the `Containerfile` startup wrappers.
-
-⚠️ **Risk:** The potential impact if left unfixed is that Chromium/Electron browser processes running within the container would execute completely without unprivileged user namespaces and sandboxing logic, which increases the blast radius of any RCE (Remote Code Execution) or other browser exploits. Disabling sandbox mechanisms breaks the security boundaries enforced by the browser.
-
-🛡️ **Solution:** The fix removes `--no-sandbox` from the wrapper scripts in `files/workspace/Containerfile` while preserving `--disable-dev-shm-usage` which is still necessary for stable container execution without shared memory limits. Unprivileged user namespaces and container runtime configurations natively handle the permissions required to utilize the built-in Chromium sandbox.
-
-## Verification
-- Run tests (`bats tests/os_validation.bats`) and verified they pass correctly.
+Note: The ISO build process intentionally skips pull requests via the `if: github.event_name != 'pull_request'` condition in `.github/workflows/build.yml`. It will automatically trigger when this code is merged into `main` or it can be manually dispatched.

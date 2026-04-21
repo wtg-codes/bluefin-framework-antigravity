@@ -1,0 +1,4 @@
+---
+type: brew
+auto-update: true
+auto-upgrade: true

@@ -23,9 +23,19 @@ interface WorkflowRun {
   };
   created_at: string;
   updated_at: string;
-  _formatted_created_at?: string;
-  _formatted_duration?: string;
+  _formatted_created_at: string;
+  _formatted_duration: string;
 }
+
+const formatWorkflowRun = (run: WorkflowRunRaw): WorkflowRun => {
+  return {
+    ...run,
+    _formatted_created_at: new Date(run.created_at).toLocaleString(),
+    _formatted_duration: run.conclusion
+      ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
+      : "--",
+  };
+};
 
 export default function Dashboard() {
   const { siteConfig } = useDocusaurusContext();
@@ -42,7 +52,11 @@ export default function Dashboard() {
       try {
         const parsed = JSON.parse(cachedData);
         if (Date.now() - parsed.timestamp < CACHE_TTL) {
-          setWorkflowRuns(parsed.data);
+          const runs = (parsed.data as (WorkflowRun | WorkflowRunRaw)[]).map(
+            (run) =>
+              "_formatted_created_at" in run ? run : formatWorkflowRun(run),
+          );
+          setWorkflowRuns(runs);
           setLoading(false);
           return;
         }
@@ -56,15 +70,16 @@ export default function Dashboard() {
     )
       .then((res) => res.json())
       .then((data) => {
-        const runs = data.workflow_runs || [];
+        const rawRuns: WorkflowRunRaw[] = data.workflow_runs || [];
+        const formattedRuns = rawRuns.map(formatWorkflowRun);
         sessionStorage.setItem(
           CACHE_KEY,
           JSON.stringify({
             timestamp: Date.now(),
-            data: runs,
+            data: formattedRuns,
           }),
         );
-        setWorkflowRuns(runs);
+        setWorkflowRuns(formattedRuns);
         setLoading(false);
       })
       .catch((err) => {
@@ -141,14 +156,7 @@ export default function Dashboard() {
                     </a>
                   </td>
                   <td style={{ padding: "10px" }}>
-                    {run._formatted_created_at ||
-                      new Date(run.created_at).toLocaleString()}
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    {run._formatted_duration ||
-                      (run.conclusion
-                        ? `${Math.round((new Date(run.updated_at).getTime() - new Date(run.created_at).getTime()) / 60000)}m`
-                        : "--")}
+                    {run._formatted_created_at}
                   </td>
                 </tr>
               ))}
