@@ -92,3 +92,11 @@ setup() {
     [[ "$output" == *"amd_pstate=active"* ]]
     [[ "$output" == *"amdgpu.sg_display=0"* ]]
 }
+
+@test "Workspace Containerfile performs sha256 validation for kubectl" {
+    if [ "$IS_LOCAL_CI" = "false" ]; then
+        skip "Source files not available on live system"
+    fi
+    grep -q "kubectl.sha256" "files/workspace/Containerfile"
+    grep -q "kubectl.sha256)  kubectl" "files/workspace/Containerfile"
+}
