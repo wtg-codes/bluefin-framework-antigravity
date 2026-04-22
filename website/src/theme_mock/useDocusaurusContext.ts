@@ -1,8 +1,8 @@
 export default function useDocusaurusContext() {
   return {
     siteConfig: {
-      title: 'Test Site',
-      tagline: 'Test Tagline',
+      title: "Test Site",
+      tagline: "Test Tagline",
     },
   };
 }

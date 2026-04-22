@@ -55,7 +55,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/wtg-codes/bluefin-framework-antigravity/tree/main/website/',
+            "https://github.com/wtg-codes/bluefin-framework-antigravity/tree/main/website/",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",

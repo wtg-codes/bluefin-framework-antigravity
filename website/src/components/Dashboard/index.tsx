@@ -113,53 +113,73 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {workflowRuns.map((run) => (
-                <tr
-                  key={run.id}
-                  style={{
-                    borderBottom: "1px solid var(--ifm-color-emphasis-200)",
-                  }}
-                >
-                  <td style={{ padding: "10px" }}>
-                    <span
-                      style={{
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        backgroundColor:
-                          run.conclusion === "success"
-                            ? "#28a745"
-                            : run.conclusion === "failure"
-                              ? "#dc3545"
-                              : "#ffc107",
-                        color:
-                          run.conclusion !== "success" &&
-                          run.conclusion !== "failure"
-                            ? "#212529"
-                            : "white",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {run.status === "completed" ? run.conclusion : run.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    <a
-                      href={run.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={run.head_commit.message.split("\n")[0]}
-                      aria-label={`Commit: ${run.head_commit.message.split("\n")[0]}`}
-                    >
-                      {run.head_commit.message.split("\n")[0].length > 50
-                        ? `${run.head_commit.message.split("\n")[0].substring(0, 50)}...`
-                        : run.head_commit.message.split("\n")[0]}
-                    </a>
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    {run._formatted_created_at}
+              {workflowRuns.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    style={{
+                      padding: "20px",
+                      textAlign: "center",
+                      color: "var(--ifm-color-emphasis-600)",
+                    }}
+                  >
+                    No recent builds found.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                workflowRuns.map((run) => (
+                  <tr
+                    key={run.id}
+                    style={{
+                      borderBottom: "1px solid var(--ifm-color-emphasis-200)",
+                    }}
+                  >
+                    <td style={{ padding: "10px" }}>
+                      <span
+                        style={{
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          backgroundColor:
+                            run.conclusion === "success"
+                              ? "#28a745"
+                              : run.conclusion === "failure"
+                                ? "#dc3545"
+                                : "#ffc107",
+                          color:
+                            run.conclusion !== "success" &&
+                            run.conclusion !== "failure"
+                              ? "#212529"
+                              : "white",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {run.status === "completed"
+                          ? run.conclusion
+                          : run.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: "10px" }}>
+                      <a
+                        href={run.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={run.head_commit.message.split("\n")[0]}
+                        aria-label={`Commit: ${run.head_commit.message.split("\n")[0]}`}
+                      >
+                        {run.head_commit.message.split("\n")[0].length > 50
+                          ? `${run.head_commit.message.split("\n")[0].substring(0, 50)}...`
+                          : run.head_commit.message.split("\n")[0]}
+                      </a>
+                    </td>
+                    <td style={{ padding: "10px" }}>
+                      {run._formatted_created_at}
+                    </td>
+                    <td style={{ padding: "10px" }}>
+                      {run._formatted_duration}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
