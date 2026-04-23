@@ -113,7 +113,14 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {workflowRuns.map((run) => (
+              {workflowRuns.length === 0 ? (
+                <tr>
+                  <td colSpan={4} style={{ padding: "20px", textAlign: "center", fontStyle: "italic", color: "var(--ifm-color-emphasis-600)" }}>
+                    No recent builds found.
+                  </td>
+                </tr>
+              ) : (
+                workflowRuns.map((run) => (
                 <tr
                   key={run.id}
                   style={{
@@ -158,8 +165,11 @@ export default function Dashboard() {
                   <td style={{ padding: "10px" }}>
                     {run._formatted_created_at}
                   </td>
+                  <td style={{ padding: "10px" }}>
+                    {run._formatted_duration}
+                  </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

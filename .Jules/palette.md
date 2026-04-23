@@ -1,0 +1,3 @@
+## 2024-11-20 - [Dashboard Component Missing Empty States & Duration Layout Parity]
+**Learning:** Found a common anti-pattern where an API endpoint can return an empty list without a corresponding UX handler resulting in completely blank UI states, which negatively affects user confidence and expectation management. Additionally, discovered a missing `<td>` in dynamically rendered lists where `<th>` headers exist, causing inconsistent table flows that break basic accessibility guidelines for tabular data.
+**Action:** Always implement a dedicated empty state UI alongside the rendering logic of data-fetching components, avoiding blank voids for empty list payloads. Add missing cells to maintain strict parity between table headers and cells across iterative arrays.

@@ -122,4 +122,24 @@ describe("Dashboard Component", () => {
     expect(screen.getByText("Cached commit")).toBeInTheDocument();
     expect(global.fetch).not.toHaveBeenCalled();
   });
+
+  it("renders empty state when no builds are found", async () => {
+    const mockRuns = {
+      workflow_runs: [],
+    };
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve(mockRuns) }),
+    ) as any;
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText("No recent builds found.")).toBeInTheDocument();
+  });
 });
