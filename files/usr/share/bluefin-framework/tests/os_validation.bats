@@ -49,6 +49,13 @@ setup() {
     [ -f "files/workspace/Containerfile" ] && grep -q "antigravity" "files/workspace/Containerfile"
 }
 
+@test "Workspace Containerfile binary checksum verification" {
+    if [ "$IS_LOCAL_CI" = "false" ]; then
+        skip "Source files not available on live system"
+    fi
+    [ $(grep -c "sha256sum -c" "files/workspace/Containerfile") -eq 3 ]
+}
+
 @test "GitHub Actions workflows resolve Node 20 deprecation" {
     # This test only makes sense in a local/CI context where the source repo is present
     if [ "$IS_LOCAL_CI" = "false" ]; then
