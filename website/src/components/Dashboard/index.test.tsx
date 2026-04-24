@@ -88,6 +88,28 @@ describe("Dashboard Component", () => {
     expect(screen.getByText("success")).toBeInTheDocument();
   });
 
+  it("handles successful API fetch and displays empty state when no runs exist", async () => {
+    const mockEmptyRuns = {
+      workflow_runs: [],
+    };
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve(mockEmptyRuns) }),
+    ) as any;
+
+    render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading build status..."),
+      ).not.toBeInTheDocument();
+    });
+
+    expect(
+      screen.getByText("No workflow runs found. Check back later!"),
+    ).toBeInTheDocument();
+  });
+
   it("uses cached data from sessionStorage if valid", async () => {
     const mockCachedRuns = {
       timestamp: Date.now(),
