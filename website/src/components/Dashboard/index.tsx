@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import CodeBlock from "@theme/CodeBlock";
 
 interface WorkflowRunRaw {
   id: number;
@@ -102,7 +103,12 @@ export default function Dashboard() {
           <p className="margin-bottom--none">No recent builds found.</p>
         </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div
+          style={{ overflowX: "auto" }}
+          tabIndex={0}
+          role="region"
+          aria-label="Latest builds"
+        >
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr
@@ -205,12 +211,9 @@ export default function Dashboard() {
               <h3>Installation</h3>
             </div>
             <div className="card__body">
-              <pre style={{ fontSize: "0.8rem" }}>
-                <code>
-                  rpm-ostree rebase ostree-unverified-registry:ghcr.io/{REPO}
-                  :latest
-                </code>
-              </pre>
+              <CodeBlock language="bash">
+                {`rpm-ostree rebase ostree-unverified-registry:ghcr.io/${REPO}:latest`}
+              </CodeBlock>
             </div>
           </div>
         </div>
