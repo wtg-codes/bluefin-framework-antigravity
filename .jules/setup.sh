@@ -41,10 +41,12 @@ if [ -n "${GCP_PROJECT_ID:-}" ]; then
     echo "☁️ Configuring Google Cloud Project: $GCP_PROJECT_ID"
     # Authenticate if credentials JSON is provided via Jules Env Vars
     if [ -n "${GOOGLE_APPLICATION_CREDENTIALS_JSON:-}" ]; then
-        echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/gcp_key.json
-        gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
+        TMP_CRED_FILE=$(mktemp)
+        trap 'rm -f "$TMP_CRED_FILE"' EXIT
+        chmod 600 "$TMP_CRED_FILE"
+        echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > "$TMP_CRED_FILE"
+        gcloud auth activate-service-account --key-file="$TMP_CRED_FILE"
         gcloud config set project "$GCP_PROJECT_ID"
-        rm -f /tmp/gcp_key.json
     else
         echo "⚠️ GCP_PROJECT_ID set, but no GOOGLE_APPLICATION_CREDENTIALS_JSON found. Skipping auth."
     fi
