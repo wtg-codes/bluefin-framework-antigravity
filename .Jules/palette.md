@@ -1,3 +1,3 @@
-## 2025-04-21 - Table Elements Parity and Async Lists Empty States
-**Learning:** Table header (`<th>`) elements must maintain parity with table cell (`<td>`) elements within React components to avoid layout inconsistencies. Additionally, dynamically loaded lists require helpful empty states to manage user expectations gracefully when the API response contains no entries.
-**Action:** When adding columns to data tables or rendering async data lists, verify table row configurations correspond evenly to table headers and always provide an empty state UI when no data is returned.
+## 2024-04-26 - Accessible Scrollable Containers
+**Learning:** Making table containers scrollable for responsiveness (`overflow-x: auto`) traps keyboard users unless explicitly handled, as they cannot pan the content without a mouse or touch device.
+**Action:** Always include `tabIndex={0}`, `role="region"`, and a descriptive `aria-label` on responsive wrapper `div` elements to ensure full keyboard accessibility.
