@@ -38,28 +38,24 @@ RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
 
 # 4. Install CNCF Tooling
 # Install kubectl
-RUN KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt) \
-    && curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
-    && curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256" \
-    && echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c - \
+RUN curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl" \
+    && echo "7c3807c0f5c1b30110a2ff1e55da1d112a6d0096201f1beb81b269f582b5d1c5  kubectl" | sha256sum -c - \
     && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
-    && rm kubectl kubectl.sha256
+    && rm kubectl
 
 # Install k9s
-RUN K9S_VERSION=$(curl -sS https://api.github.com/repos/derailed/k9s/releases/latest | jq -r .tag_name) \
-    && curl -sSLO "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_amd64.tar.gz" \
-    && curl -sSLO "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/checksums.sha256" \
-    && grep "k9s_Linux_amd64.tar.gz$" checksums.sha256 | sha256sum -c - \
+RUN curl -sSLO "https://github.com/derailed/k9s/releases/download/v0.32.4/k9s_Linux_amd64.tar.gz" \
+    && echo "d62611d9be2c35b782a765e98421500196acbf8be844cd3d9e32d4fa7846da05  k9s_Linux_amd64.tar.gz" | sha256sum -c - \
     && tar -xzf k9s_Linux_amd64.tar.gz k9s \
     && install -o root -g root -m 0755 k9s /usr/local/bin/k9s \
-    && rm k9s_Linux_amd64.tar.gz checksums.sha256 k9s
+    && rm k9s_Linux_amd64.tar.gz k9s
 
 # Install helm
-RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh \
-    && echo "38b65f882d9cae3891755bdb03becc6a01ae6f9cb24826c191f219ddfee70a5d  get_helm.sh" | sha256sum -c - \
-    && chmod 700 get_helm.sh \
-    && ./get_helm.sh \
-    && rm get_helm.sh
+RUN curl -sSLO "https://get.helm.sh/helm-v3.14.4-linux-amd64.tar.gz" \
+    && echo "a5844ef2c38ef6ddf3b5a8f7d91e7e0e8ebc39a38bb3fc8013d629c1ef29c259  helm-v3.14.4-linux-amd64.tar.gz" | sha256sum -c - \
+    && tar -xzf helm-v3.14.4-linux-amd64.tar.gz linux-amd64/helm \
+    && install -o root -g root -m 0755 linux-amd64/helm /usr/local/bin/helm \
+    && rm -rf helm-v3.14.4-linux-amd64.tar.gz linux-amd64
 
 # 5. Install AI Agent Dependencies
 # Gemini CLI
