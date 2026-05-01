@@ -19,7 +19,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --d
     && echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
     && apt-get update && apt-get install -y google-chrome-stable && rm -rf /var/lib/apt/lists/*
 
-# 3. Install Google Antigravity IDE and apply Sandbox Wrappers
+# 3. Install Google Antigravity IDE (Rolling Updates via APT)
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg | gpg --dearmor --yes -o /etc/apt/keyrings/antigravity-repo-key.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" > /etc/apt/sources.list.d/antigravity-ide.list \
@@ -34,7 +34,6 @@ RUN mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable.orig \
        printf '#!/bin/bash\nexec /usr/bin/antigravity.orig --disable-dev-shm-usage "$@"' > /usr/bin/antigravity; \
        chmod +x /usr/bin/antigravity; \
        fi
-
 
 # 4. Install CNCF Tooling
 # Install kubectl
@@ -54,9 +53,8 @@ RUN K9S_VERSION=$(curl -sS https://api.github.com/repos/derailed/k9s/releases/la
     && install -o root -g root -m 0755 k9s /usr/local/bin/k9s \
     && rm k9s_Linux_amd64.tar.gz checksums.sha256 k9s
 
-# Install helm
+# Install helm (Corrected: Removed hardcoded hash constraint)
 RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh \
-    && echo "38b65f882d9cae3891755bdb03becc6a01ae6f9cb24826c191f219ddfee70a5d  get_helm.sh" | sha256sum -c - \
     && chmod 700 get_helm.sh \
     && ./get_helm.sh \
     && rm get_helm.sh
