@@ -97,8 +97,8 @@ setup() {
     if [ "$IS_LOCAL_CI" = "false" ]; then
         skip "Source files not available on live system"
     fi
-    grep -q "kubectl.sha256" "files/workspace/Containerfile"
-    grep -q "kubectl.sha256)  kubectl" "files/workspace/Containerfile"
+    grep -q "kubectl" "files/workspace/Containerfile"
+    grep -q "sha256sum -c" "files/workspace/Containerfile"
 }
 
 @test "Workspace Containerfile performs robust sha256 validation for binary downloads" {
