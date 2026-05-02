@@ -53,11 +53,13 @@ RUN K9S_VERSION=$(curl -sS https://api.github.com/repos/derailed/k9s/releases/la
     && install -o root -g root -m 0755 k9s /usr/local/bin/k9s \
     && rm k9s_Linux_amd64.tar.gz checksums.sha256 k9s
 
-# Install helm (Corrected: Removed hardcoded hash constraint)
-RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh \
-    && chmod 700 get_helm.sh \
-    && ./get_helm.sh \
-    && rm get_helm.sh
+# Install helm (Corrected: Download specific release, verify sha256, and install)
+RUN HELM_VERSION="v3.15.0" \
+    && curl -sSLO "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" \
+    && echo "a74747ac40777b86d3ff6f1be201504bba65ca46cd68b5fe25d3c394d0dcf745  helm-${HELM_VERSION}-linux-amd64.tar.gz" | sha256sum -c - \
+    && tar -xzf "helm-${HELM_VERSION}-linux-amd64.tar.gz" \
+    && install -o root -g root -m 0755 linux-amd64/helm /usr/local/bin/helm \
+    && rm -rf "helm-${HELM_VERSION}-linux-amd64.tar.gz" linux-amd64
 
 # 5. Install AI Agent Dependencies
 # Gemini CLI
