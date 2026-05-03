@@ -100,3 +100,14 @@ setup() {
     grep -q "kubectl.sha256" "files/workspace/Containerfile"
     grep -q "kubectl.sha256)  kubectl" "files/workspace/Containerfile"
 }
+
+@test "Workspace Containerfile strictly enforces checksum validation for downloaded binaries" {
+    if [ "$IS_LOCAL_CI" = "false" ]; then
+        skip "Source files not available on live system"
+    fi
+    # Ensure there are at least 3 usages of sha256sum -c (kubectl, k9s, and helm)
+    [ $(grep -c "sha256sum -c" "files/workspace/Containerfile") -ge 3 ]
+
+    # Verify the get_helm.sh pattern is eliminated
+    ! grep -q "get_helm.sh" "files/workspace/Containerfile"
+}
