@@ -102,7 +102,12 @@ export default function Dashboard() {
           <p className="margin-bottom--none">No recent builds found.</p>
         </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div
+          style={{ overflowX: "auto" }}
+          tabIndex={0}
+          role="region"
+          aria-label="Latest Builds Table"
+        >
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr
