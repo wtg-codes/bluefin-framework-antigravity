@@ -59,7 +59,7 @@ jobs:
         uses: docker/setup-buildx-action@v4.0.0
 
       - name: Build and Push Workspace Image
-        uses: docker/build-push-action@v6.10.0
+        uses: docker/build-push-action@v7.1.0
         with:
           context: files/workspace
           file: files/workspace/Containerfile
