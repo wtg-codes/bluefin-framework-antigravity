@@ -34,7 +34,7 @@ jobs:
           cosign verify --key cosign.pub ghcr.io/${{ github.repository_owner }}/wtgos:latest
 
       - name: Build Custom ISO
-        uses: jasonn3/build-container-installer@v1.2.3
+        uses: jasonn3/build-container-installer@v1.4.0
         id: build
         with:
           arch: x86_64
