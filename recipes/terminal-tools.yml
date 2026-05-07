@@ -2,3 +2,5 @@
 type: brew
 auto-update: true
 auto-upgrade: true
+direct-pull: true
+installer-commit: "540da2ca91271886910572df3a50332540ca84e4"
