@@ -33,4 +33,4 @@ modules:
 
   - type: gschema-overrides
     include:
-      - /usr/share/glib-2.0/schemas/
+      - files/usr/share/glib-2.0/schemas/
