@@ -1,6 +1,6 @@
 # ISO Architecture: Antigravity ISO Forge
 
-This document outlines the architecture and implementation phases for generating bootable Live ISO images for **bluefin-framework-antigravity**.
+This document outlines the architecture and implementation phases for generating bootable Live ISO images for **bluefin-wtg**.
 
 ## Technical Flow
 The ISO generation process follows a "Container-to-Installer" (C2I) pattern:
@@ -96,7 +96,7 @@ jobs:
       - name: Generate ISO
         uses: jasonn3/build-container-installer@main
         with:
-          image_name: bluefin-framework-antigravity
+          image_name: bluefin-wtg
           image_repo: ghcr.io/${{ github.repository }}
           image_tag: latest
           # Ensure we use the digest from the bluebuild output
