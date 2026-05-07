@@ -23,7 +23,7 @@ setup() {
     [ -f "$DISTROBOX_INI" ]
 }
 
-@test "Distrobox configuration uses the declarative wtg-workspace image" {
+@test "Distrobox configuration uses the declarative agv-container image" {
     grep -q "image=ghcr.io/wtg-codes/agv-container:latest" "$DISTROBOX_INI"
 }
 
