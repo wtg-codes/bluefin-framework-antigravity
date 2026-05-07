@@ -33,4 +33,4 @@ modules:
 
   - type: gschema-overrides
     include:
-      - files/usr/share/glib-2.0/schemas/
+      - zz1-org.gnome.mutter.gschema.override
