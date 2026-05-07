@@ -64,14 +64,18 @@ jobs:
         id: get-digest
         if: github.event_name != 'pull_request'
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}:latest"
+          IMAGE="ghcr.io/${{ github.repository_owner }}/wtgos:latest"
           DIGEST=$(skopeo inspect --creds="${{ github.actor }}:${{ github.token }}" docker://$IMAGE | jq -r '.Digest')
+          if [ -z "$DIGEST" ] || [ "$DIGEST" == "null" ]; then
+            echo "Failed to fetch digest for $IMAGE"
+            exit 1
+          fi
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
       - name: Attest Build Provenance
         if: github.event_name != 'pull_request'
         uses: actions/attest-build-provenance@v2.2.0
         with:
-          subject-name: ghcr.io/${{ github.repository }}
+          subject-name: ghcr.io/${{ github.repository_owner }}/wtgos
           subject-digest: ${{ steps.get-digest.outputs.digest }}
           push-to-registry: true
