@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: "wtgOS",
+  title: "bluefin-wtg",
   tagline: "Bluefin-DX + Google dev tools for Framework 13",
   favicon: "img/favicon.ico",
 
@@ -18,12 +18,12 @@ const config: Config = {
   url: "https://wtg-codes.github.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/bluefin-framework-antigravity/",
+  baseUrl: "/bluefin-wtg/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "wtg-codes", // Usually your GitHub org/user name.
-  projectName: "bluefin-framework-antigravity", // Usually your repo name.
+  projectName: "bluefin-wtg", // Usually your repo name.
 
   onBrokenLinks: "throw",
 
@@ -44,7 +44,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/wtg-codes/bluefin-framework-antigravity/tree/main/website/",
+            "https://github.com/wtg-codes/bluefin-wtg/tree/main/website/",
         },
         blog: {
           showReadingTime: true,
@@ -55,7 +55,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/wtg-codes/bluefin-framework-antigravity/tree/main/website/",
+            "https://github.com/wtg-codes/bluefin-wtg/tree/main/website/",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
@@ -76,9 +76,9 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "wtgOS",
+      title: "bluefin-wtg",
       logo: {
-        alt: "wtgOS Logo",
+        alt: "bluefin-wtg Logo",
         src: "img/logo.svg",
       },
       items: [
@@ -90,7 +90,7 @@ const config: Config = {
         },
         { to: "/docs/dashboard", label: "Dashboard", position: "left" },
         {
-          href: "https://github.com/wtg-codes/bluefin-framework-antigravity",
+          href: "https://github.com/wtg-codes/bluefin-wtg",
           label: "GitHub",
           position: "right",
         },
@@ -139,7 +139,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} wtgOS Project. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} bluefin-wtg Project. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

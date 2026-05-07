@@ -5,24 +5,24 @@
 3. [x] Migrate Build Dashboard to Docusaurus build pipeline.
 4. [x] Remove redundant `glib-compile-schemas` comments from `recipe.yml`.
 
-# 🛠️ Jules Implementation Plan: wtgOS "Sanity-Gravity" Remediation
+# 🛠️ Jules Implementation Plan: bluefin-wtg "Sanity-Gravity" Remediation
 
 **Architects:** The Cloud-Native Linux Professor & Jorge Castro
 **Objective:** Restore cryptographic SLSA Level 3 provenance, enforce true immutability, and implement cloud-native cattle-driven developer workflows.
 **Agent Assignee:** Jules
 
-This document outlines the strict, multi-round Pull Request strategy to remediate the wtgOS repository. Jules is instructed to execute these rounds sequentially. No task or round is considered complete until its Exit Criteria can be mathematically or programmatically proven.
+This document outlines the strict, multi-round Pull Request strategy to remediate the bluefin-wtg repository. Jules is instructed to execute these rounds sequentially. No task or round is considered complete until its Exit Criteria can be mathematically or programmatically proven.
 
 ## ⭕ Round 1: Securing the Perimeter (The Podman Socket)
 **Goal:** Quarantine the AI agent and prevent root-level escape paths by removing the host podman socket passthrough.
 
 - [ ] **Task 1.1: Locate Distrobox Configuration**
-  Open `files/usr/share/bluefin-framework/wtgOS/distrobox.ini` (or the equivalent initialization script used for workspace generation).
+  Open `files/usr/share/bluefin-framework/bluefin-wtg/distrobox.ini` (or the equivalent initialization script used for workspace generation).
   - **Exit Criteria:** File is successfully loaded into the agent's context and parsed without errors.
 
 - [ ] **Task 1.2: Excise Socket Passthrough**
   Find and DELETE the line: `volume=/run/user/1000/podman/podman.sock:/run/podman/podman.sock`.
-  - **Exit Criteria:** `grep "/run/user/1000/podman/podman.sock" files/usr/share/bluefin-framework/wtgOS/distrobox.ini` returns exit code 1 (no match found).
+  - **Exit Criteria:** `grep "/run/user/1000/podman/podman.sock" files/usr/share/bluefin-framework/bluefin-wtg/distrobox.ini` returns exit code 1 (no match found).
 
 - [ ] **Task 1.3: Reroute Kubernetes Testing (If Applicable)**
   If kind (Kubernetes-in-Docker) or DinD is currently used in testing scripts, refactor the test suite to run kind directly on the immutable host, outside the agent's sandbox.

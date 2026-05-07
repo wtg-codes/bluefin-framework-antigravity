@@ -1,7 +1,7 @@
-# Level 10 Performance Review: bluefin-framework-antigravity
+# Level 10 Performance Review: bluefin-wtg
 
 ## Overview
-This repository represents a "Next-Gen" implementation of the Bluefin ecosystem, specifically tailored for the **Framework Laptop 13 (Ryzen AI 300 series)**. While Project Bluefin provides the robust, general-purpose base, **bluefin-framework-antigravity** pushes the boundaries of specialization, security, and developer experience.
+This repository represents a "Next-Gen" implementation of the Bluefin ecosystem, specifically tailored for the **Framework Laptop 13 (Ryzen AI 300 series)**. While Project Bluefin provides the robust, general-purpose base, **bluefin-wtg** pushes the boundaries of specialization, security, and developer experience.
 
 ## Comparative Analysis: Project Bluefin vs. Antigravity
 

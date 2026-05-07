@@ -21,7 +21,7 @@ Before pushing changes to the repository, you can run the BATS test suite locall
 ### Running Tests Locally
 If you have already built the image locally:
 ```bash
-podman run --rm localhost/bluefin-framework-antigravity:latest bats /tests/os_validation.bats
+podman run --rm localhost/bluefin-wtg:latest bats /tests/os_validation.bats
 ```
 
 ## Disaster Recovery
@@ -32,7 +32,7 @@ Since the OS is atomic, rolling back to a previous "known-good" version is strai
 rpm-ostree rollback
 ```
 
-### Resetting wtgOS Workspace
+### Resetting bluefin-wtg Workspace
 If the AI quarantine environment becomes corrupted, you can delete the workspace and recreate it:
 ```bash
 rm -rf ~/.local/share/wtg-workspace

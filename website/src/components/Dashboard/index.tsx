@@ -90,7 +90,7 @@ export default function Dashboard() {
 
   return (
     <section className="margin-vert--lg">
-      <p>Live build status and image metadata for wtgOS.</p>
+      <p>Live build status and image metadata for bluefin-wtg.</p>
 
       <h2>Latest Builds</h2>
       {loading ? (
@@ -195,7 +195,7 @@ export default function Dashboard() {
             <div className="card__footer">
               <a
                 className="button button--primary"
-                href={`https://github.com/${REPO}/pkgs/container/bluefin-framework-antigravity`}
+                href={`https://github.com/${REPO}/pkgs/container/bluefin-wtg`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -27,7 +27,7 @@ import Manifest from './shared/manifest.md';
 The decision to use a strictly immutable host (`bluefin-dx`) with zero host-level CLI/GUI packages minimizes the attack surface. Any development tool or agent must exist within a container, ensuring that the core OS remains in a "known-good" state at all times. Our Test-Driven Infrastructure (TDI) mathematically proves these security constraints are met before any image is published.
 
 ## Repository Administration Checklist (Mandatory)
-The following governance rules are enforced by the repository administrator to maintain the integrity of wtgOS:
+The following governance rules are enforced by the repository administrator to maintain the integrity of bluefin-wtg:
 
 1.  **Branch Protection (main):**
     - [x] Require a pull request before merging.

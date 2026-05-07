@@ -69,7 +69,7 @@ The CI/CD pipeline must mathematically prove the OS image meets our hardware con
 
 ## Jules Agent Configuration
 
-This file provides context and instructions for the Jules agent interacting with the bluefin-framework-antigravity (wtgOS) repository.
+This file provides context and instructions for the Jules agent interacting with the bluefin-wtg (bluefin-wtg) repository.
 
 ### Environment Initialization
 

@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: wtgos
-description: wtgOS - Bluefin-DX + Google dev tools for Framework 13.
+description: bluefin-wtg - Bluefin-DX + Google dev tools for Framework 13.
 
 base-image: ghcr.io/ublue-os/bluefin-dx
 image-version: latest
@@ -27,10 +27,10 @@ modules:
       - amd_pstate=active
       - amdgpu.sg_display=0
 
-  - type: justfiles
-    include:
-      - wtgOS.just
-
   - from-file: flatpaks.yml
 
   - type: signing
+
+  - type: gschema-overrides
+    include:
+      - /usr/share/glib-2.0/schemas/
