@@ -39,7 +39,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.4",
     "eslint": "^10.2.1",
-    "jest-environment-jsdom": "^30.3.0",
+    "jest-environment-jsdom": "^30.4.1",
     "jsdom": "^29.1.1",
     "prettier": "^3.0.0",
     "ts-jest": "^29.4.9",
